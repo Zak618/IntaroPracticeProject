@@ -63,3 +63,4 @@
 [2023-07-03T19:15:06.120304+00:00] doctrine.DEBUG: Executing statement: UNLISTEN "messenger_messages" {"sql":"UNLISTEN \"messenger_messages\""} []
 [2023-07-03T19:15:06.121036+00:00] doctrine.DEBUG: Executing statement: UNLISTEN "messenger_messages" {"sql":"UNLISTEN \"messenger_messages\""} []
 [2023-07-03T19:15:06.121245+00:00] doctrine.INFO: Disconnecting [] []
+[2023-07-03T19:51:04.790604+00:00] deprecation.INFO: User Deprecated: The "Monolog\Logger" class is considered final. It may change without further notice as of its next major version. You should not extend it from "Symfony\Bridge\Monolog\Logger". {"exception":"[object] (ErrorException(code: 0): User Deprecated: The \"Monolog\\Logger\" class is considered final. It may change without further notice as of its next major version. You should not extend it from \"Symfony\\Bridge\\Monolog\\Logger\". at C:\\OpenServer\\domains\\IntaroPracticeProject\\vendor\\symfony\\error-handler\\DebugClassLoader.php:335)"} []
