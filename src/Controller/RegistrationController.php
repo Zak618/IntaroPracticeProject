@@ -31,7 +31,7 @@ class RegistrationController extends BaseController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, ClientAuthenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         $user = new Client();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -42,6 +42,7 @@ class RegistrationController extends BaseController
                     $form->get('plainPassword')->getData()
                 )
             );
+            $user->setEmail($form->get('email')->getData());
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -49,26 +50,26 @@ class RegistrationController extends BaseController
             $client = $this->createRetailCrmClient();
 
             // заготовка для отправления запроса
-            $request = new CustomersCreateRequest();
-            $request->customer = new Customer();
+            $requestCustomer = new CustomersCreateRequest();
+            $requestCustomer->customer = new Customer();
 
             // определение полей пользователя
             // пример https://packagist.org/packages/retailcrm/api-client-php
-            $request->site = 'test';
-            $request->customer->externalId = (string)$user->getId();
-            $request->customer->email = $form->get('email')->getData();
-            $request->customer->firstName = $form->get('firstname')->getData();
-            $request->customer->lastName = $form->get('lastname')->getData();
-            $request->customer->patronymic = $form->get('patronymic')->getData();
-            $request->customer->phones = [new CustomerPhone()];
-            $request->customer->phones[0]->number = $form->get('phone')->getData();
-            $request->customer->birthday = $form->get('birthday')->getData();
+            $requestCustomer->site = 'khalif';
+            $requestCustomer->customer->externalId = (string)$user->getId();
+            $requestCustomer->customer->email = $form->get('email')->getData();
+            $requestCustomer->customer->firstName = $form->get('firstname')->getData();
+            $requestCustomer->customer->lastName = $form->get('lastname')->getData();
+            $requestCustomer->customer->patronymic = $form->get('patronymic')->getData();
+            $requestCustomer->customer->phones = [new CustomerPhone()];
+            $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
+            $requestCustomer->customer->birthday = $form->get('birthday')->getData();
 
             try {
-                $response = $client->customers->create($request);
-                dd($response);
+                $response = $client->customers->create($requestCustomer);
+                dump($response);
             } catch (ApiExceptionInterface | ClientExceptionInterface $exception) {
-                echo $exception; // Every ApiExceptionInterface instance should implement __toString() method.
+                print_r($exception) ;
                 $entityManager->remove($user);
                 exit(-1);
             }
