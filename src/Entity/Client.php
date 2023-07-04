@@ -32,9 +32,6 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToOne(mappedBy: 'id_client', cascade: ['persist', 'remove'])]
     private ?Basket $basket = null;
 
-    #[ORM\Column(type: 'boolean')]
-    private $isVerified = false;
-
     public function getId(): ?int
     {
         return $this->id;
@@ -123,18 +120,6 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
         }
 
         $this->basket = $basket;
-
-        return $this;
-    }
-
-    public function isVerified(): bool
-    {
-        return $this->isVerified;
-    }
-
-    public function setIsVerified(bool $isVerified): static
-    {
-        $this->isVerified = $isVerified;
 
         return $this;
     }
