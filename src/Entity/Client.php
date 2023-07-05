@@ -35,6 +35,8 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public $patronymic;
     public $phone;
     public $birthday;
+    public $address;
+    public $sex;
 
     #[ORM\OneToOne(mappedBy: 'id_client', cascade: ['persist', 'remove'])]
     private ?Basket $basket = null;

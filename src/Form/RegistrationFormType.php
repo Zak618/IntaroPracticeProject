@@ -85,15 +85,14 @@ class RegistrationFormType extends AbstractType
                     'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
                 ],
             ])
-            // ->add('address')
-            //->add('sex')
-            // ->add('sex', ChoiceType::class, [
-            //     'choices'  => [
-            //         'Woman' => null,
-            //         'Man' => true,
+            ->add('address')
+            ->add('sex', ChoiceType::class, [
+                'choices'  => [
+                    'Woman' => 2,
+                    'Man' => 1,
                     
-            //     ],
-            // ])
+                ],
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
