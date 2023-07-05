@@ -6,12 +6,11 @@ use App\Entity\Client;
 use App\Form\RegistrationFormType;
 use App\Security\ClientAuthenticator;
 use App\Security\EmailVerifier;
-
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 
 use RetailCrm\Api\Interfaces\ApiExceptionInterface;
 use RetailCrm\Api\Interfaces\ClientExceptionInterface;
-use RetailCrm\Api\Factory\SimpleClientFactory;
 use RetailCrm\Api\Model\Entity\Customers\Customer;
 use RetailCrm\Api\Model\Entity\Customers\CustomerPhone;
 use RetailCrm\Api\Model\Request\Customers\CustomersCreateRequest;
@@ -22,8 +21,6 @@ use Symfony\Component\Mime\Address;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
-use SymfonyCasts\Bundle\VerifyEmail\Exception\VerifyEmailExceptionInterface;
 
 class RegistrationController extends BaseController
 {
@@ -43,6 +40,7 @@ class RegistrationController extends BaseController
                 )
             );
             $user->setEmail($form->get('email')->getData());
+            $user->setUuid(uuid_create(UUID_TYPE_RANDOM));
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -54,27 +52,30 @@ class RegistrationController extends BaseController
             $requestCustomer->customer = new Customer();
 
             // определение полей пользователя
-            // пример https://packagist.org/packages/retailcrm/api-client-php
-            $requestCustomer->site = 'khalif';
-            $requestCustomer->customer->externalId = (string)$user->getId();
-            $requestCustomer->customer->email = $form->get('email')->getData();
+            // докю: https://github.com/retailcrm/api-client-php/blob/fa0e8a7075aa0b72b87f5632af01f2b000a61f6e/doc/index.md
+            $requestCustomer->customer->externalId = (string)$user->getUuid();
+            $requestCustomer->customer->email  = $form->get('email')->getData();
             $requestCustomer->customer->firstName = $form->get('firstname')->getData();
             $requestCustomer->customer->lastName = $form->get('lastname')->getData();
             $requestCustomer->customer->patronymic = $form->get('patronymic')->getData();
-            $requestCustomer->customer->phones = [new CustomerPhone()];
-            $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
-            $requestCustomer->customer->birthday = $form->get('birthday')->getData();
+
+            // TODO дописать
+            // $requestCustomer->customer->phones = [new CustomerPhone()];
+            // $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
+            // $requestCustomer->customer->birthday = new DateTime($form->get('birthday')->getData());
+            // $requestCustomer->customer->sex = $form->get('sex')->getData();
 
             try {
                 $response = $client->customers->create($requestCustomer);
-                dump($response);
+                dd($response);
             } catch (ApiExceptionInterface | ClientExceptionInterface $exception) {
-                print_r($exception) ;
+                dd($exception);
+                // удаляет пользователя
                 $entityManager->remove($user);
                 exit(-1);
             }
 
-
+            // TODO нужно авторизовать пользователя и понять, как перенаправить на дом. стр.
             return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,
