@@ -67,7 +67,7 @@ class RegistrationController extends BaseController
 
             try {
                 $response = $client->customers->create($requestCustomer);
-                dd($response);
+                // dd($response);
             } catch (ApiExceptionInterface | ClientExceptionInterface $exception) {
                 dd($exception);
                 // удаляет пользователя

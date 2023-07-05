@@ -13,6 +13,7 @@ class StoreController extends AbstractController
     {
         return $this->render('store/index.html.twig', [
             'controller_name' => 'StoreController',
+            'title' => 'djf'
         ]);
     }
 }
