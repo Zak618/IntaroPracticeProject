@@ -42,8 +42,8 @@ class RegistrationController extends BaseController
             $user->setEmail($form->get('email')->getData());
             $user->setUuid(uuid_create(UUID_TYPE_RANDOM));
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            // $entityManager->persist($user);
+            // $entityManager->flush();
 
             $client = $this->createRetailCrmClient();
 
@@ -58,16 +58,17 @@ class RegistrationController extends BaseController
             $requestCustomer->customer->firstName = $form->get('firstname')->getData();
             $requestCustomer->customer->lastName = $form->get('lastname')->getData();
             $requestCustomer->customer->patronymic = $form->get('patronymic')->getData();
-
+            $requestCustomer->customer->phones = [new CustomerPhone()];
+            $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
+            $requestCustomer->customer->birthday = $form->get('birthday')->getData();
+            $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
+            
             // TODO дописать
-            // $requestCustomer->customer->phones = [new CustomerPhone()];
-            // $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
-            // $requestCustomer->customer->birthday = new DateTime($form->get('birthday')->getData());
-            // $requestCustomer->customer->sex = $form->get('sex')->getData();
+            // $requestCustomer->customer->address = $form->get('address');
 
             try {
                 $response = $client->customers->create($requestCustomer);
-                dd($response);
+                // dd($response);
             } catch (ApiExceptionInterface | ClientExceptionInterface $exception) {
                 dd($exception);
                 // удаляет пользователя

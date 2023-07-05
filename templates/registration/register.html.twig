@@ -12,6 +12,16 @@
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.firstname) }}
+        {{ form_row(registrationForm.lastname) }}
+        {{ form_row(registrationForm.patronymic) }}
+        {{ form_row(registrationForm.phone) }}
+        {{ form_row(registrationForm.birthday) }}
+        {{ form_row(registrationForm.sex) }}
+        {{ form_row(registrationForm.address) }}
+       
+
+
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
