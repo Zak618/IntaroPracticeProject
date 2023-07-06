@@ -85,7 +85,6 @@ class RegistrationFormType extends AbstractType
                     'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
                 ],
             ])
-            ->add('address')
             ->add('sex', ChoiceType::class, [
                 'choices'  => [
                     'Woman' => 2,

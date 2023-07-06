@@ -42,8 +42,8 @@ class RegistrationController extends BaseController
             $user->setEmail($form->get('email')->getData());
             $user->setUuid(uuid_create(UUID_TYPE_RANDOM));
 
-            // $entityManager->persist($user);
-            // $entityManager->flush();
+            $entityManager->persist($user);
+            $entityManager->flush();
 
             $client = $this->createRetailCrmClient();
 
@@ -70,13 +70,12 @@ class RegistrationController extends BaseController
                 $response = $client->customers->create($requestCustomer);
                 // dd($response);
             } catch (ApiExceptionInterface | ClientExceptionInterface $exception) {
-                dd($exception);
                 // удаляет пользователя
                 $entityManager->remove($user);
+                dd($exception);
                 exit(-1);
             }
 
-            // TODO нужно авторизовать пользователя и понять, как перенаправить на дом. стр.
             return $userAuthenticator->authenticateUser(
                 $user,
                 $authenticator,
