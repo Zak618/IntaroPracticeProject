@@ -19,29 +19,12 @@
         {{ form_row(registrationForm.patronymic) }}
         {{ form_row(registrationForm.phone) }}
         {{ form_row(registrationForm.birthday) }}
-        {{ form_row(registrationForm.sex) }}
-        {{ form_row(registrationForm.address) }}
-       
-
-
+        {{ form_row(registrationForm.sex) }}   
         {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
-
-        <input type="tel" id="phone" name="phone" required placeholder="Телефон" class="form-control mb-2">
-        <input type="date" id="birthdate" name="birthdate" required placeholder="Birthdate" class="form-control mb-2">
-        <select id="gender" name="gender" required class="form-control mb-2">
-            <option value="">Выберете пол</option>
-            <option value="male">Мужчина</option>
-            <option value="female">Девушка</option>
-            <option value="other">Другое</option>
-        </select>
-
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-        <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
     </form>
 
 {% endblock %}
