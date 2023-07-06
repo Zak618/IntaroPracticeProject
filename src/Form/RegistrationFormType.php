@@ -10,7 +10,12 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\IsTrue;
 use Symfony\Component\Validator\Constraints\Length;
+use Symfony\Component\Validator\Constraints\Regex;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class RegistrationFormType extends AbstractType
 {
@@ -18,6 +23,75 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('email')
+            ->add('firstname',TextType::class, [
+
+                'required' => true,
+                'constraints' => [new Length([
+                    'min' => 3,
+                    
+                ]),
+                    new NotBlank([
+                        'message' => 'Пожалуйста, введите имя',
+                    ]),
+    
+            ],])
+            ->add('lastname',TextType::class, [
+
+                'required' => true,
+                'constraints' => [new Length([
+                    'min' => 3,
+                    
+                ]),
+                    new NotBlank([
+                        'message' => 'Пожалуйста, введите Фамилию',
+                    ]),
+    
+            ],])
+            ->add('patronymic',TextType::class, [
+
+                'required' => true,
+                'constraints' => [new Length([
+                    'min' => 3,
+                    
+                ]),
+                    new NotBlank([
+                        'message' => 'Пожалуйста, введите Отчество',
+                    ]),
+    
+            ],])
+            //->add('phone')
+            ->add('phone', TelType::class,[
+                'required' => true,
+                'constraints' => [
+                    new Length([
+                    'min' => 3,
+                    
+                ]),
+                new Regex([
+                    'pattern'=> "/^\+79\d{9}$/"
+                    
+              ]),
+                    new NotBlank([
+                        'message' => 'Вы пытаетесь ввести недопустимые символы. Введите номер телефона в формате +7**********',
+                    ]),
+    
+            ],
+
+            ])
+            //->add('birthday')
+            ->add('birthday', DateType::class, [
+                'widget' => 'single_text',
+                'placeholder' => [
+                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                ],
+            ])
+            ->add('sex', ChoiceType::class, [
+                'choices'  => [
+                    'Woman' => 2,
+                    'Man' => 1,
+                    
+                ],
+            ])
             ->add('agreeTerms', CheckboxType::class, [
                 'mapped' => false,
                 'constraints' => [
