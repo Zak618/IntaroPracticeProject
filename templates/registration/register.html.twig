@@ -20,11 +20,15 @@
         {{ form_row(registrationForm.phone) }}
         {{ form_row(registrationForm.birthday) }}
         {{ form_row(registrationForm.sex) }}   
-        {{ form_row(registrationForm.email) }}
+        {# {{ form_row(registrationForm.email) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
-        }) }}
+        }) }} #}
         {{ form_row(registrationForm.agreeTerms) }}
     </form>
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
 
 {% endblock %}
