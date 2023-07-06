@@ -57,7 +57,9 @@
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
             "symfony/flex": true,
-            "symfony/runtime": true
+            "symfony/runtime": true,
+            "php-http/discovery": true,
+            "civicrm/composer-compile-plugin": true
         },
         "optimize-autoloader": true,
         "preferred-install": {
