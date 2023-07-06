@@ -28,10 +28,10 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
     public function authenticate(Request $request): Passport
     {
         
-        $email = $request->request->get('email', '');
-        $phone = $request->request->get('phone', '');
-        $birthdate = $request->request->get('birthdate', '');
-        $gender = $request->request->get('gender', '');
+        // $email = $request->request->get('email', '');
+        // $phone = $request->request->get('phone', '');
+        // $birthdate = $request->request->get('birthdate', '');
+        // $gender = $request->request->get('gender', '');
 
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
@@ -42,11 +42,11 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ],
-            [
-                'phone' => $phone,
-                'birthdate' => $birthdate,
-                'gender' => $gender,
-            ]
+            // [
+            //     'phone' => $phone,
+            //     'birthdate' => $birthdate,
+            //     'gender' => $gender,
+            // ]
 
         );
     }
@@ -57,7 +57,7 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
-        // Получите пользователя, прошедшего аутентификацию
+/*         // Получите пользователя, прошедшего аутентификацию
         $user = $token->getUser();
 
         // Получите данные о телефоне, дате рождения и поле из аутентификационного паспорта
@@ -73,7 +73,7 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
         // Сохраните изменения в базе данных
 
         // Добавьте код для переадресации на главную страницу
-        return new RedirectResponse($this->urlGenerator->generate('home'));
+        return new RedirectResponse($this->urlGenerator->generate('home')); */
 
     
         // For example:
