@@ -27,7 +27,12 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
 
     public function authenticate(Request $request): Passport
     {
+        
         $email = $request->request->get('email', '');
+        $phone = $request->request->get('phone', '');
+        $birthdate = $request->request->get('birthdate', '');
+        $gender = $request->request->get('gender', '');
+
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
@@ -36,7 +41,13 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
             new PasswordCredentials($request->request->get('password', '')),
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
+            ],
+            [
+                'phone' => $phone,
+                'birthdate' => $birthdate,
+                'gender' => $gender,
             ]
+
         );
     }
 
@@ -46,6 +57,25 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
+        // Получите пользователя, прошедшего аутентификацию
+        $user = $token->getUser();
+
+        // Получите данные о телефоне, дате рождения и поле из аутентификационного паспорта
+        $phone = $token->getAttributes()['phone'] ?? null;
+        $birthdate = $token->getAttributes()['birthdate'] ?? null;
+        $gender = $token->getAttributes()['gender'] ?? null;
+
+        // Обновите значения полей в объекте пользователя
+        $user->setPhone($phone);
+        $user->setBirthdate($birthdate);
+        $user->setGender($gender);
+
+        // Сохраните изменения в базе данных
+
+        // Добавьте код для переадресации на главную страницу
+        return new RedirectResponse($this->urlGenerator->generate('home'));
+
+    
         // For example:
         // return new RedirectResponse($this->urlGenerator->generate('some_route'));
         throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
