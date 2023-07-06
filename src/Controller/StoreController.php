@@ -16,8 +16,6 @@ class StoreController extends BaseController
     public function index(): Response
     {
         return $this->render('store/index.html.twig', [
-            'controller_name' => 'StoreController',
-            'title' => 'djf', 
             'header' => $this->getHeader()
         ]);
     }
@@ -42,11 +40,53 @@ class StoreController extends BaseController
         }
         
         return $this->render('store/category.html.twig', [
-            'controller_name' => 'StoreController',
-            'title' => 'djf', 
             'header' => $this->getHeader(),
             'products' => $response->products,
             'totalPageCount' => $response->pagination->totalPageCount
+        ]);
+    }
+
+    #[Route('/product/{id}', name: 'app_product', methods: ['POST'])]
+    public function addProductToCart(Request $request)
+    {
+        $client = $this->createRetailCrmClient();
+
+        $requestProduct = new ProductsRequest();
+        $requestProduct->filter = new ProductFilterType();
+        $requestProduct->filter->ids = [$request->get('id')];
+
+        try {            
+            $product = ($client->store->products($requestProduct))->products[0];
+        } catch (Exception $exception) {
+            dd($exception);
+            exit(-1);
+        }
+
+        // todo доделать 
+
+    }
+
+    // детальная страница товара
+    #[Route('/product/{id}', name: 'app_product', methods: ['GET'])]
+    public function detailPage(Request $request): Response
+    {
+        $client = $this->createRetailCrmClient();
+
+        $requestProduct = new ProductsRequest();
+        $requestProduct->filter = new ProductFilterType();
+        $requestProduct->filter->ids = [$request->get('id')];
+
+        try {            
+            $response = ($client->store->products($requestProduct))->products[0];
+            // dd($response);
+        } catch (Exception $exception) {
+            dd($exception);
+            exit(-1);
+        }
+
+        return $this->render('store/product.html.twig', [
+            'header' => $this->getHeader(),
+            'product' => $response
         ]);
     }
 }
