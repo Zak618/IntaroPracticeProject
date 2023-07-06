@@ -14,7 +14,8 @@ class StoreController extends BaseController
         dd($this->getHeader());
         return $this->render('store/index.html.twig', [
             'controller_name' => 'StoreController',
-            'title' => 'djf'
+            'title' => 'djf', 
+            'header' => $this->getHeader()
         ]);
     }
 }
