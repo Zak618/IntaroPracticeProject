@@ -1,3 +1,15 @@
 controllers:
     resource: ../src/Controller/
     type: attribute
+header:
+    path: /header
+    controller: App\Controller\HeaderController::index
+    methods: [GET]
+
+login:
+  path: /login
+  controller: App\Controller\LoginController::index
+
+register:
+  path: /register
+  controller: App\Controller\LoginController::index

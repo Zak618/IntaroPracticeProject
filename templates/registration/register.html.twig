@@ -1,15 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% block title %}Регистрация{% endblock %}
 
 {% block body %}
     {% for flash_error in app.flashes('verify_email_error') %}
         <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
     {% endfor %}
 
-    <h1>Register</h1>
+    <h1>Регистрация</h1>
 
-    {{ form_errors(registrationForm) }}
+    <form method="post">
+        <input type="email" id="email" name="email" required autocomplete="email" placeholder="Email" class="form-control mb-2">
+        <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Пароль" class="form-control mb-2">
 
     {{ form_start(registrationForm) }}
         {{ form_row(registrationForm.firstname) }}
@@ -28,6 +30,18 @@
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        <input type="tel" id="phone" name="phone" required placeholder="Телефон" class="form-control mb-2">
+        <input type="date" id="birthdate" name="birthdate" required placeholder="Birthdate" class="form-control mb-2">
+        <select id="gender" name="gender" required class="form-control mb-2">
+            <option value="">Выберете пол</option>
+            <option value="male">Мужчина</option>
+            <option value="female">Девушка</option>
+            <option value="other">Другое</option>
+        </select>
+
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+        <button type="submit" class="btn btn-primary">Зарегестрироваться</button>
+    </form>
+
 {% endblock %}
