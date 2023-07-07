@@ -28,7 +28,7 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
     public function authenticate(Request $request): Passport
     {
         
-        // $email = $request->request->get('email', '');
+        $email = $request->request->get('email', '');
         // $phone = $request->request->get('phone', '');
         // $birthdate = $request->request->get('birthdate', '');
         // $gender = $request->request->get('gender', '');
