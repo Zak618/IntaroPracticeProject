@@ -20,8 +20,7 @@ final class Version20230705142619 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('ALTER TABLE client ALTER uuid DROP DEFAULT');
-        $this->addSql('ALTER TABLE client ALTER uuid SET NOT NULL');
+        $this->addSql('ALTER TABLE client ADD COLUMN uuid UUID NOT NULL');
     }
 
     public function down(Schema $schema): void
