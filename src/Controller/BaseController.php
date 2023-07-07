@@ -22,6 +22,7 @@ class BaseController extends AbstractController
     protected function createRetailCrmClient()
     {
         $client = SimpleClientFactory::createClient($_ENV['RETAIL_CRM_URL'], $_ENV['API_KEY']);
+        $client->api->credentials();
         
         return $client;
     }
