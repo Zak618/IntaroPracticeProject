@@ -63,6 +63,7 @@ class RegistrationController extends BaseController
             $requestCustomer->customer->birthday = $form->get('birthday')->getData();
             $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
             
+            
             // TODO дописать
             // $requestCustomer->customer->address = $form->get('address');
 

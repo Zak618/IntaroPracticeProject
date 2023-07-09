@@ -88,8 +88,8 @@ class ClientController extends BaseController
             $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
             $requestCustomer->customer->birthday = $form->get('birthday')->getData();
             $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
-        // $requestCustomer->customer->address = new CustomerAddress();
-            // $requestCustomer->customer->address['text'] = $form-> get('address')->getData();
+            $requestCustomer->customer->address = new CustomerAddress();
+            $requestCustomer->customer->address->text = $form-> get('address')->getData();
             
             
             try {

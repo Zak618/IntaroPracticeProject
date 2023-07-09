@@ -6,6 +6,7 @@ use App\Repository\ClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use PharIo\Manifest\Email;
 use PhpParser\Node\Expr\FuncCall;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -14,6 +15,7 @@ use RetailCrm\Api\Factory\SimpleClientFactory;
 use RetailCrm\Api\Model\Filter\Customers\CustomerFilter;
 use RetailCrm\Api\Model\Request\Customers\CustomersRequest;
 use Symfony\Component\Security\Core\User\EquatableInterface;
+
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
@@ -177,6 +179,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
                 $this->birthday = $resultClient->birthday;
                 $this->address = $resultClient->address;
                 $this->sex = $resultClient->sex;
+                $this->address = $resultClient->address->text;
 
                 $this->isCrmLoad = true;
 
