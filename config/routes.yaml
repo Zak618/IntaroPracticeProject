@@ -13,3 +13,8 @@ login:
 register:
   path: /register
   controller: App\Controller\LoginController::index
+
+
+order_create:
+  path: /order/create
+  controller: App\Controller\OrderController::create
