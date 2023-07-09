@@ -2,6 +2,9 @@
 
 namespace App\Security;
 
+use RetailCrm\Api\Factory\SimpleClientFactory;
+use RetailCrm\Api\Model\Filter\Customers\CustomerFilter;
+use RetailCrm\Api\Model\Request\Customers\CustomersRequest;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,10 +32,6 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
     {
         
         $email = $request->request->get('email', '');
-        // $phone = $request->request->get('phone', '');
-        // $birthdate = $request->request->get('birthdate', '');
-        // $gender = $request->request->get('gender', '');
-
 
         $request->getSession()->set(Security::LAST_USERNAME, $email);
 
@@ -42,23 +41,22 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
             [
                 new CsrfTokenBadge('authenticate', $request->request->get('_csrf_token')),
             ],
-            // [
-            //     'phone' => $phone,
-            //     'birthdate' => $birthdate,
-            //     'gender' => $gender,
-            // ]
+            [
+                'phone' => 'fdf',
+                'birthday' => 'fdf',
+                'sex' => 'fdf',
+            ]
 
         );
     }
 
     public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
-    {
+    {        
         if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
             return new RedirectResponse($targetPath);
         }
-
-        $user = $token->getUser();
-        $user->crmLoad();
+        
+        // $user->phone = $phone;
 
 /*         // Получите пользователя, прошедшего аутентификацию
         $user = $token->getUser();

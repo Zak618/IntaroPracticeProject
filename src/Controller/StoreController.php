@@ -21,7 +21,7 @@ class StoreController extends BaseController
     {
         $user = $this->getUser();
         // $user->crmLoad();
-        // dd($user);
+        dd($user);
         return $this->render('store/index.html.twig', [
             'header' => $this->getHeader()
         ]);

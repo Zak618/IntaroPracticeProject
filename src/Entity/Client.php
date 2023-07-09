@@ -13,10 +13,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use RetailCrm\Api\Factory\SimpleClientFactory;
 use RetailCrm\Api\Model\Filter\Customers\CustomerFilter;
 use RetailCrm\Api\Model\Request\Customers\CustomersRequest;
+use Symfony\Component\Security\Core\User\EquatableInterface;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-class Client implements UserInterface, PasswordAuthenticatedUserInterface
+class Client implements UserInterface, PasswordAuthenticatedUserInterface, EquatableInterface
 { 
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -188,5 +189,14 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
         } else {
             return false;
         }
+    }
+
+    public function isEqualTo(UserInterface $user): bool
+    {
+        if ($user instanceof self) {
+            return $user->getId() === $this->getId();
+        }
+
+        return false;
     }
 }
