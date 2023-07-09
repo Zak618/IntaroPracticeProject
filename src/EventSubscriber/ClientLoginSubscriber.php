@@ -16,8 +16,6 @@ class ClientLoginSubscriber implements EventSubscriberInterface
         if ($user instanceof Client) {
             $user->crmLoad();
         }
-
-        dd($user);
     }
 
     public static function getSubscribedEvents()
