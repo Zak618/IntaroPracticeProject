@@ -6,6 +6,7 @@ use App\Repository\ClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use PhpParser\Node\Expr\FuncCall;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -16,7 +17,7 @@ use RetailCrm\Api\Model\Request\Customers\CustomersRequest;
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class Client implements UserInterface, PasswordAuthenticatedUserInterface
-{    
+{ 
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -41,7 +42,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public $birthday;
     public $address;
     public $sex;
-    public $isCrtmLoad = false;
+    public $isCrmLoad = false;
 
     #[ORM\OneToOne(mappedBy: 'id_client', cascade: ['persist', 'remove'])]
     private ?Basket $basket = null;
@@ -155,7 +156,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function crmLoad()
     {
-        if(!$this->isCrtmLoad && $this->uuid)
+        if(!$this->isCrmLoad && $this->uuid)
         {
             $client = SimpleClientFactory::createClient($_ENV['RETAIL_CRM_URL'], $_ENV['API_KEY']);
 
@@ -176,7 +177,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
                 $this->address = $resultClient->address;
                 $this->sex = $resultClient->sex;
 
-                $this->isCrtmLoad = true;
+                $this->isCrmLoad = true;
 
             } catch (Exception $exception) {
                 dd($exception);
