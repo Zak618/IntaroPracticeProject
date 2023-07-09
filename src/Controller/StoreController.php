@@ -14,6 +14,7 @@ class StoreController extends BaseController
     #[Route('', name: 'app_store')]
     public function index(): Response
     {
+        dd($this->getHeader());
         return $this->render('store/index.html.twig', [
             'header' => $this->getHeader()
         ]);
