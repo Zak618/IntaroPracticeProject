@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Form\ClientType;
 use App\Repository\ClientRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,30 +74,29 @@ class ClientController extends BaseController
         $form = $this->createForm(ClientType::class, $user);
         //dd($user);
         $form->handleRequest($request);
-        
-
-        // заготовка для отправления запроса
-        $requestCustomer = new CustomersEditRequest();
-        $requestCustomer->customer= new Customer();
-        $requestCustomer->by= ByIdentifier::ID;
-        $requestCustomer->customer->email  = $form->get('email')->getData();
-        $requestCustomer->customer->firstName = $form->get('firstname')->getData();
-        $requestCustomer->customer->lastName = $form->get('lastname')->getData();
-        $requestCustomer->customer->patronymic = $form->get('patronymic')->getData();
-        $requestCustomer->customer->phones = [new CustomerPhone()];
-        $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
-        $requestCustomer->customer->birthday = $form->get('birthday')->getData();
-        $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
-       // $requestCustomer->customer->address = new CustomerAddress();
-        $requestCustomer->customer->address['text'] = $form-> get('address')->getData();
-        
-        
-         $user_api->customers->edit(4770, $requestCustomer);
-        
-       
-       
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // заготовка для отправления запроса
+            $requestCustomer = new CustomersEditRequest();
+            $requestCustomer->customer= new Customer();
+            $requestCustomer->by= ByIdentifier::ID;
+            $requestCustomer->customer->email  = $form->get('email')->getData();
+            $requestCustomer->customer->firstName = $form->get('firstname')->getData();
+            $requestCustomer->customer->lastName = $form->get('lastname')->getData();
+            $requestCustomer->customer->patronymic = $form->get('patronymic')->getData();
+            $requestCustomer->customer->phones = [new CustomerPhone()];
+            $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
+            $requestCustomer->customer->birthday = $form->get('birthday')->getData();
+            $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
+        // $requestCustomer->customer->address = new CustomerAddress();
+            $requestCustomer->customer->address['text'] = $form-> get('address')->getData();
+            
+            
+            try {
+                $user_api->customers->edit($user->getUuid(), $requestCustomer);
+            } catch (Exception $e) {
+                dd($e);
+            }
 
             $clientRepository->save($client, true);
 
