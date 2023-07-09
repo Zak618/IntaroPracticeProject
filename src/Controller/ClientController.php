@@ -64,9 +64,10 @@ class ClientController extends BaseController
 
         
         $form = $this->createForm(ClientType::class, $client);
-        $form->handleRequest($request);
+        
         $user=$this->getUser();
         $user->crmLoad();
+        $form->handleRequest($request);
         
         //$client =$this->createRetailCrmClient();
         //$client->crmLoad();
