@@ -20,7 +20,7 @@ use RetailCrm\Api\Interfaces\ApiExceptionInterface;
 use RetailCrm\Api\Model\Entity\CustomersCorporate\CustomerCorporate;
 
 #[Route('/client')]
-class ClientController extends AbstractController
+class ClientController extends BaseController
 {
     #[Route('/', name: 'app_client_index', methods: ['GET'])]
     public function index(ClientRepository $clientRepository): Response
@@ -57,41 +57,22 @@ class ClientController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_client_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Client $client, ClientRepository $clientRepository): Response
-    {
-        $form = $this->createForm(ClientType::class, $client);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $clientRepository->save($client, true);
-
-            return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('client/edit.html.twig', [
-            'client' => $client,
-            'form' => $form,
-        ]);
-    }
-
 
     #[Route('/{id}/edit_client', name: 'app_client_edit', methods: ['GET', 'POST'])]
     public function edit_client(Request $request, Client $client, ClientRepository $clientRepository): Response
     {
+
+        
         $form = $this->createForm(ClientType::class, $client);
         $form->handleRequest($request);
+        $user=$this->getUser();
+        $user->crmLoad();
         
-        $client =$this->createRetailCrmClient();
+        //$client =$this->createRetailCrmClient();
+        //$client->crmLoad();
+       // $requestCustomer = new CustomersCreateRequest();
 
-        try {
-            $response = $client->orders->list();
-        } catch (ApiExceptionInterface | ClientExceptionInterface $exception) {
-            echo $exception; // Every ApiExceptionInterface instance should implement __toString() method.
-            exit(-1);
-        }
-    
-
+       
 
         if ($form->isSubmitted() && $form->isValid()) {
 

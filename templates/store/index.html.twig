@@ -22,6 +22,7 @@ Hello {{ app.user.userIdentifier }}
         {% if app.user %} 
 <a href="{{ path('app_register') }}" >Зарегистрироваться</a>
 
+<a href="{{ path('app_client_edit' ,{'id': app.user.id}) }}" >Изменить данные пользователя</a>
 {% else %}
 <a href="{{ path('app_logout') }}" >Выйти</a>
 

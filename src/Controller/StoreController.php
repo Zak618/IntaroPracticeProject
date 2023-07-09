@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Basket;
+use App\Entity\Client;
 use App\Repository\BasketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
