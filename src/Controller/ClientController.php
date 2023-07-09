@@ -79,7 +79,7 @@ class ClientController extends BaseController
             // заготовка для отправления запроса
             $requestCustomer = new CustomersEditRequest();
             $requestCustomer->customer= new Customer();
-            $requestCustomer->by= ByIdentifier::ID;
+            // $requestCustomer->by= ByIdentifier::ID;
             $requestCustomer->customer->email  = $form->get('email')->getData();
             $requestCustomer->customer->firstName = $form->get('firstname')->getData();
             $requestCustomer->customer->lastName = $form->get('lastname')->getData();
@@ -89,7 +89,7 @@ class ClientController extends BaseController
             $requestCustomer->customer->birthday = $form->get('birthday')->getData();
             $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
         // $requestCustomer->customer->address = new CustomerAddress();
-            $requestCustomer->customer->address['text'] = $form-> get('address')->getData();
+            // $requestCustomer->customer->address['text'] = $form-> get('address')->getData();
             
             
             try {
