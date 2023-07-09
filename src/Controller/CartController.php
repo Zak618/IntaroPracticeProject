@@ -16,17 +16,24 @@ use Symfony\Component\Routing\Annotation\Route;
 class CartController extends BaseController
 {
 
-    #[Route('/product/{offer_id}', name: 'app_product_add', methods: ['POST'])]
-    public function addProductToCart(Request $request, EntityManagerInterface $entityManager)
-    {
+    /**
+     * @param EntityManagerInterface $entityManager
+     * @param int $offerId
+     * id оффера для изменения его количества в корзине
+     * @param string $typeCange
+     * тип изменения 'add' - добавить
+     * 'delete' удалить
+     */
+    private function changeCart(
+        EntityManagerInterface $entityManager, 
+        int $offerId, 
+        string $typeCange = 'add'
+    ) {
         // проверка пользователя 
         $user = $this->getUser();
         if(is_null($user))
         {
-            return new JsonResponse([
-                'status' => 'error',
-                'message' => 'User not auth'
-            ], Response::HTTP_BAD_REQUEST);
+            throw new Exception("User not auth");
         }
 
         // получаем запись корзины из бд
@@ -42,16 +49,38 @@ class CartController extends BaseController
         $productsCart = $cart->getProduct();
 
         // проверяем, есть ли оффер в корзине
-        if(isset($productsCart[$request->get('offer_id')]))
+        if(isset($productsCart[$offerId]))
         {
-            $productsCart[$request->get('offer_id')]['count'] += 1;
-        } else {
-            // получаем оффер
+            $offer = $productsCart[$offerId];
+
+            switch($typeCange) {
+                case 'add':
+                    $productsCart[$offerId]['count'] += 1;
+                    break;
+
+                case 'delete':
+                    if($productsCart[$offerId]['count'] == 1)
+                    {
+                        unset($productsCart[$offerId]);
+                    } else {
+                        $productsCart[$offerId]['count'] -= 1;
+                    }
+                    break;
+
+                case 'deleteHard':
+                    unset($productsCart[$offerId]);
+                    break;
+
+                default:
+                    throw new Exception("Unknown type");
+            }
+        } else if($typeCange == 'add') {
+            // получаем продукт по офферу
             $client = $this->createRetailCrmClient();
 
             $requestProduct = new ProductsRequest();
             $requestProduct->filter = new ProductFilterType();
-            $requestProduct->filter->offerIds = [$request->get('offer_id')];
+            $requestProduct->filter->offerIds = [$offerId];
 
             try {            
                 $product = $client->store->products($requestProduct);
@@ -63,25 +92,70 @@ class CartController extends BaseController
             // проверяем, что что-то пришло
             if(empty($product->products))
             {
-                return new JsonResponse([
-                    'status' => 'error',
-                    'message' => 'Product not exists'
-                ], Response::HTTP_BAD_REQUEST);
+                throw new Exception("Offer not exists");
             }
 
             $product = $product->products[0];
 
-            $productsCart[$request->get('offer_id')] = get_object_vars($offer);
-            $productsCart[$request->get('offer_id')]['count'] = 1;
+            // ищу нужный оффер
+            foreach($product->offers as $offer)
+            {
+                if($offer->id == $offerId)
+                    break;
+            }
+            $offer = get_object_vars($offer);
+
+            $productsCart[$offerId] = $offer;
+            $productsCart[$offerId]['count'] = 1;
+        } else {
+            throw new Exception("You cannot delete a product that is not in the cart");
         }
 
         // обновляем/сохраняем корзину
-        $cart->setProduct($productsCart);
-        $cart->setCountOfProducts($cart->getCountOfProducts() + 1);
-        $cart->setPrice($cart->getPrice() + $offer->price);
+        try {
+            $cart->setProduct($productsCart);
 
-        $entityManager->persist($cart);
-        $entityManager->flush();
+            switch($typeCange) {
+                case 'add':
+                    $cart->setCountOfProducts($cart->getCountOfProducts() + 1);
+                    $cart->setPrice($cart->getPrice() + $offer['price']);
+                    break;
+                case 'delete':
+                    $cart->setCountOfProducts($cart->getCountOfProducts() - 1);
+                    $cart->setPrice($cart->getPrice() - $offer['price']);
+                    break;
+                case 'deleteHard':
+                    $cart->setCountOfProducts($cart->getCountOfProducts() - $offer['count']);
+                    $cart->setPrice($cart->getPrice() - $offer['price']);
+                    break;
+                default:
+                    throw new Exception("Unknown type");
+            }
+    
+            $entityManager->persist($cart);
+            $entityManager->flush();
+        } catch (Exception $e) {
+            throw new Exception("Failed to update buckets");
+        }
+
+        return true;
+    }
+    
+    #[Route('/product/{offer_id}', name: 'app_product_add', methods: ['POST'])]
+    public function addProductToCart(Request $request, EntityManagerInterface $entityManager)
+    {
+        dd($request);
+        try {
+            $this->changeCart(
+                $entityManager,
+                $request->get('offer_id')
+            );
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
 
         return new JsonResponse([
             'status' => 'success',
@@ -92,5 +166,44 @@ class CartController extends BaseController
     #[Route('/product/{offer_id}', name: 'app_product_delete', methods: ['DELETE'])]
     public function deleteProductToCart(Request $request, EntityManagerInterface $entityManager)
     {
+        try {
+            $this->changeCart(
+                $entityManager,
+                $request->get('offer_id'),
+                'delete'
+            );
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'ok'
+        ], Response::HTTP_OK);
+    }
+
+    #[Route('/product/{offer_id}/all', name: 'app_product_delete_all', methods: ['DELETE'])]
+    public function deleteHardProductToCart(Request $request, EntityManagerInterface $entityManager)
+    {
+        try {
+            $this->changeCart(
+                $entityManager,
+                $request->get('offer_id'),
+                'deleteHard'
+            );
+        } catch (Exception $e) {
+            return new JsonResponse([
+                'status' => 'error',
+                'message' => $e->getMessage()
+            ], Response::HTTP_BAD_REQUEST);
+        }
+
+        return new JsonResponse([
+            'status' => 'success',
+            'message' => 'ok'
+        ], Response::HTTP_OK);
     }
 }
