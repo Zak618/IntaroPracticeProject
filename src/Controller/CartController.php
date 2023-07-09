@@ -38,6 +38,25 @@ class CartController extends BaseController
             'message' => 'ok'
         ], Response::HTTP_OK);
     }
+
+    #[Route('/cart', name: 'app_cart')]
+    public function index()
+    {
+        $user = $this->getUser();
+        if($user)
+        {
+            $cart = $user->getBasket();
+        }
+
+        $header = $this->getHeader();
+        
+        return $this->render('cart/index.html.twig', [
+            'header' => $header, 
+            'cart' => isset($cart) ? $cart : null
+        ]);
+    }
+
+
     /**
      * @param EntityManagerInterface $entityManager
      * @param int $offerId
