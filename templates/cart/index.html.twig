@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {% for product in cart.product %}
+        {{ product.name }}
+        {{ product.count }}
+    {% endfor %}
+
+    Цена корзины: {{ cart.price }}
+    Всего товаров: {{ cart.getCountOfProducts() }}
+    
+{% endblock %}
