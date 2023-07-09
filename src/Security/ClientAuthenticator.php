@@ -57,6 +57,9 @@ class ClientAuthenticator extends AbstractLoginFormAuthenticator
             return new RedirectResponse($targetPath);
         }
 
+        $user = $token->getUser();
+        $user->crmLoad();
+
 /*         // Получите пользователя, прошедшего аутентификацию
         $user = $token->getUser();
 

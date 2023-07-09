@@ -5,14 +5,18 @@ namespace App\Entity;
 use App\Repository\ClientRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use RetailCrm\Api\Factory\SimpleClientFactory;
+use RetailCrm\Api\Model\Filter\Customers\CustomerFilter;
+use RetailCrm\Api\Model\Request\Customers\CustomersRequest;
 
 #[ORM\Entity(repositoryClass: ClientRepository::class)]
 #[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
 class Client implements UserInterface, PasswordAuthenticatedUserInterface
-{
+{    
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -37,6 +41,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
     public $birthday;
     public $address;
     public $sex;
+    public $isCrtmLoad = false;
 
     #[ORM\OneToOne(mappedBy: 'id_client', cascade: ['persist', 'remove'])]
     private ?Basket $basket = null;
@@ -146,5 +151,41 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface
         $this->uuid = $uuid;
 
         return $this;
+    }
+
+    public function crmLoad()
+    {
+        if(!$this->isCrtmLoad && $this->uuid)
+        {
+            $client = SimpleClientFactory::createClient($_ENV['RETAIL_CRM_URL'], $_ENV['API_KEY']);
+
+            $customersRequest = new CustomersRequest();
+            $customersRequest->filter = new CustomerFilter();
+            $customersRequest->filter->externalIds = [$this->uuid];
+
+            try {
+                $customersResponse = $client->customers->list($customersRequest);
+                if (0 === count($customersResponse->customers)) return false;
+                
+                $resultClient = $customersResponse->customers[0];
+                $this->firstname = $resultClient->firstName;
+                $this->lastname = $resultClient->lastName;
+                $this->patronymic = $resultClient->patronymic;
+                $this->phone = $resultClient->phones;
+                $this->birthday = $resultClient->birthday;
+                $this->address = $resultClient->address;
+                $this->sex = $resultClient->sex;
+
+                $this->isCrtmLoad = true;
+
+            } catch (Exception $exception) {
+                dd($exception);
+                exit(-1);
+            }
+
+            return true;
+        } else {
+            return false;
+        }
     }
 }
