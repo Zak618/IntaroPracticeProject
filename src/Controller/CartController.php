@@ -17,7 +17,7 @@ class CartController extends BaseController
 { 
     #[Route('/product/{offer_id}', name: 'app_product_add', methods: ['POST'])]
     #[Route('/product/{offer_id}', name: 'app_product_delete', methods: ['DELETE'])]
-    #[Route('/product/{offer_id}/all', name: 'app_product_delete_all', methods: ['app_product_delete'])]
+    #[Route('/product/{offer_id}/all', name: 'app_product_delete_all', methods: ['DELETE'])]
     public function addProductToCart(Request $request, EntityManagerInterface $entityManager)
     {
         try {
