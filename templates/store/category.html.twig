@@ -2,6 +2,17 @@
 
 {% block body %}
 
+    <nav>    
+        {% if categories is not empty %}
+            {% for category in categories %}
+                <div>
+                <a href="/category/{{ category.id }}">
+                    {{ category.name }}
+                </a></div>
+            {% endfor %}
+        {% endif %}
+    </nav>
+
     {% if products is not empty %}
         <ul>
             {% for product in products %}
