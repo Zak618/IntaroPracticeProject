@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Exception;
+use RetailCrm\Api\Model\Filter\Store\ProductFilterType;
+use RetailCrm\Api\Model\Filter\Store\ProductGroupFilterType;
+use RetailCrm\Api\Model\Request\Store\ProductGroupsRequest;
+use RetailCrm\Api\Model\Request\Store\ProductsRequest;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -11,11 +16,81 @@ class StoreController extends BaseController
     #[Route('', name: 'app_store')]
     public function index(): Response
     {
-        dd($this->getHeader());
+        $header = $this->getHeader();
+        
         return $this->render('store/index.html.twig', [
-            'controller_name' => 'StoreController',
-            'title' => 'djf', 
-            'header' => $this->getHeader()
+            'header' => $header, 
+            'categories' => $header['category_menu']
         ]);
+    }
+
+    // страница раздела
+    #[Route('/category/{id}', name: 'app_category_page')]
+    public function page(Request $request): Response
+    {
+        $currentPage = $request->query->getInt('page', 1);
+
+        $client = $this->createRetailCrmClient();
+
+        $requestProducts = new ProductsRequest();
+        $requestProducts->filter = new ProductFilterType();
+        $requestProducts->filter->groups = [$request->get('id')];
+        $requestProducts->page = $currentPage;
+
+        try {            
+            $response = ($client->store->products($requestProducts));
+        } catch (Exception $exception) {
+            dd($exception);
+            exit(-1);
+        }
+        
+        return $this->render('store/category.html.twig', [
+            'header' => $this->getHeader(),
+            'categories' => $this->getChildCategoryById($request->get('id')),
+            'products' => $response->products,
+            'totalPageCount' => $response->pagination->totalPageCount
+        ]);
+    }
+
+    // детальная страница товара
+    #[Route('/product/{id}', name: 'app_product', methods: ['GET'])]
+    public function detailPage(Request $request): Response
+    {
+        $client = $this->createRetailCrmClient();
+
+        $requestProduct = new ProductsRequest();
+        $requestProduct->filter = new ProductFilterType();
+        $requestProduct->filter->ids = [$request->get('id')];
+
+        try {            
+            $response = ($client->store->products($requestProduct))->products[0];
+            // dd($response);
+        } catch (Exception $exception) {
+            dd($exception);
+            exit(-1);
+        }
+
+        return $this->render('store/product.html.twig', [
+            'header' => $this->getHeader(),
+            'product' => $response
+        ]);
+    }
+
+    private function getChildCategoryById($categoryId)
+    {
+        $client = $this->createRetailCrmClient();
+
+        $request = new ProductGroupsRequest();
+        $request->filter = new ProductGroupFilterType();
+        $request->filter->parentGroupId = $categoryId;
+
+        try {            
+            $category = ($client->store->productGroups($request))->productGroup;
+        } catch (Exception $exception) {
+            dd($exception);
+            exit(-1);
+        }
+
+        return $category;
     }
 }

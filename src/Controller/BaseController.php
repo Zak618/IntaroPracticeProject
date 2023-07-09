@@ -8,14 +8,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use RetailCrm\Api\Factory\SimpleClientFactory;
 use RetailCrm\Api\Model\Filter\Store\ProductGroupFilterType;
 use RetailCrm\Api\Model\Request\Store\ProductGroupsRequest;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+use Symfony\Contracts\Cache\CacheInterface;
+use Symfony\Contracts\Cache\ItemInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 class BaseController extends AbstractController
 {
     protected $client;
 
-    public function __construct(HttpClientInterface $client)
-    {
+    public function __construct(
+        HttpClientInterface $client
+    ) {
         $this->client = $client;
     }
     
@@ -29,37 +33,41 @@ class BaseController extends AbstractController
 
     protected function getHeader()
     { 
-        $client = $this->createRetailCrmClient();
+        $cache = new FilesystemAdapter();
 
-        $request = new ProductGroupsRequest();
-        $request->filter = new ProductGroupFilterType();
+        $header = $cache->getItem('headerinfo');
+        if (!$header->isHit()) {
+            $client = $this->createRetailCrmClient();
 
-        // TODO указать нулл уровень и убрать перебор с удалением
-        // $request->filter->parentGroupId = 19;
-        
-        // $request->page = 1;
-        // $request->limit = 10;
+            $request = new ProductGroupsRequest();
+            $request->filter = new ProductGroupFilterType();
 
-        try {            
-            $category = ($client->store->productGroups($request))->productGroup;
-        } catch (Exception $exception) {
-            dd($exception);
-            exit(-1);
-        }
-
-        // TODO временно
-        foreach($category as $key => $c)
-        {
-            if($c->parentId !== null)
-            {
-                unset($category[$key]);
+            try {            
+                $category = ($client->store->productGroups($request))->productGroup;
+            } catch (Exception $exception) {
+                dd($exception);
+                exit(-1);
             }
+
+            // TODO временно
+            foreach($category as $key => $c)
+            {
+                if($c->parentId !== null)
+                {
+                    unset($category[$key]);
+                }
+            }
+
+            // сохраняем данные в кеш
+            $header->set([
+                'logo' => $_ENV['LOGO_SRC'],
+                'shopName' => $_ENV['SHOP_NAME'],
+                'category_menu' => array_values($category)
+            ]);
+            $header->expiresAfter(3600 * 2);
+            $cache->save($header);
         }
-        
-        return  [
-            'logo' => $_ENV['LOGO_SRC'],
-            'shopName' => $_ENV['SHOP_NAME'],
-            'category_menu' => array_values($category)
-        ];
+
+        return $cache->getItem('headerinfo')->get();
     }
 }
