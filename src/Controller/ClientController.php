@@ -67,7 +67,7 @@ class ClientController extends BaseController
     public function edit_client(Request $request, Client $client, ClientRepository $clientRepository): Response
     {
 
-        $user =$this->createRetailCrmClient();
+        $user_api =$this->createRetailCrmClient();
         $user=$this->getUser();
         $user->crmLoad();
         $form = $this->createForm(ClientType::class, $user);
@@ -87,16 +87,13 @@ class ClientController extends BaseController
         $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
         $requestCustomer->customer->birthday = $form->get('birthday')->getData();
         $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
-        $requestCustomer->customer->address = [new CustomerAddress()];
+       // $requestCustomer->customer->address = new CustomerAddress();
         $requestCustomer->customer->address['text'] = $form-> get('address')->getData();
+        
+        
+         $user_api->customers->edit(4770, $requestCustomer);
+        
        
-        // TODO дописать
-        // $requestCustomer->customer->address = $form->get('address');
-        
-        
- 
-       // $requestCustomer = new CustomersCreateRequest();
-
        
 
         if ($form->isSubmitted() && $form->isValid()) {
