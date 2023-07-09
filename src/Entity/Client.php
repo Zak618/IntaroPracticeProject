@@ -173,7 +173,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
                 $this->firstname = $resultClient->firstName;
                 $this->lastname = $resultClient->lastName;
                 $this->patronymic = $resultClient->patronymic;
-                $this->phone = $resultClient->phones;
+                $this->phone = $resultClient->phones[0]->number;
                 $this->birthday = $resultClient->birthday;
                 $this->address = $resultClient->address;
                 $this->sex = $resultClient->sex;

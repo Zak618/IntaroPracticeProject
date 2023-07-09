@@ -6,6 +6,10 @@ use App\Entity\Client;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\TelType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class ClientType extends AbstractType
 {
@@ -13,16 +17,24 @@ class ClientType extends AbstractType
     {
         $builder
             ->add('email')
-            ->add('password')
-            ->add('uuid')
-            ->add('basket')
-            ->add('firstname')
-            ->add('lastname')
-            ->add('patronymic')
-            ->add('phone')
-            ->add('birthday')
+            ->add('firstname', TextType::class)
+            ->add('lastname', TextType::class)
+            ->add('patronymic', TextType::class)
+            ->add('phone')//, TelType::class)
+            ->add('birthday',DateType::class, [
+                'widget' => 'single_text',
+                'placeholder' => [
+                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
+                ],
+            ])
             ->add('address')
-            ->add('sex')
+            ->add('sex', ChoiceType::class, [
+                'choices'  => [
+                    'Woman' => 2,
+                    'Man' => 1,
+                    
+                ],
+            ])
             
         ;
     }

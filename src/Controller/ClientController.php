@@ -9,6 +9,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use RetailCrm\Api\Enum\ByIdentifier;
 
 
 use RetailCrm\Api\Model\Entity\Customers\Customer;
@@ -17,7 +18,11 @@ use RetailCrm\Api\Model\Request\Customers\CustomersCreateRequest;
 use RetailCrm\Api\Interfaces\ClientExceptionInterface;
 use RetailCrm\Api\Factory\SimpleClientFactory;
 use RetailCrm\Api\Interfaces\ApiExceptionInterface;
+
+use RetailCrm\Api\Model\Entity\Customers\CustomerAddress;
 use RetailCrm\Api\Model\Entity\CustomersCorporate\CustomerCorporate;
+use RetailCrm\Api\Model\Response\Customers\CustomersEditResponse;
+use RetailCrm\Api\Model\Request\Customers\CustomersEditRequest;
 
 #[Route('/client')]
 class ClientController extends BaseController
@@ -62,16 +67,34 @@ class ClientController extends BaseController
     public function edit_client(Request $request, Client $client, ClientRepository $clientRepository): Response
     {
 
-        
-        $form = $this->createForm(ClientType::class, $client);
-        $client =$this->createRetailCrmClient();
+        $user =$this->createRetailCrmClient();
         $user=$this->getUser();
         $user->crmLoad();
-        dd($user);
+        $form = $this->createForm(ClientType::class, $user);
+        //dd($user);
         $form->handleRequest($request);
         
+
+        // заготовка для отправления запроса
+        $requestCustomer = new CustomersEditRequest();
+        $requestCustomer->customer= new Customer();
+        $requestCustomer->by= ByIdentifier::ID;
+        $requestCustomer->customer->email  = $form->get('email')->getData();
+        $requestCustomer->customer->firstName = $form->get('firstname')->getData();
+        $requestCustomer->customer->lastName = $form->get('lastname')->getData();
+        $requestCustomer->customer->patronymic = $form->get('patronymic')->getData();
+        $requestCustomer->customer->phones = [new CustomerPhone()];
+        $requestCustomer->customer->phones[0]->number = $form->get('phone')->getData();
+        $requestCustomer->customer->birthday = $form->get('birthday')->getData();
+        $requestCustomer->customer->sex = $request->get('sex') == 2 ? 'female' : 'male';
+        $requestCustomer->customer->address = [new CustomerAddress()];
+        $requestCustomer->customer->address['text'] = $form-> get('address')->getData();
+       
+        // TODO дописать
+        // $requestCustomer->customer->address = $form->get('address');
         
-        //$client->crmLoad();
+        
+ 
        // $requestCustomer = new CustomersCreateRequest();
 
        
@@ -80,7 +103,7 @@ class ClientController extends BaseController
 
             $clientRepository->save($client, true);
 
-            return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_store', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('client/edit.html.twig', [

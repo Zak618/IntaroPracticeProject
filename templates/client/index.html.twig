@@ -10,9 +10,13 @@
             <tr>
                 <th>Id</th>
                 <th>Email</th>
-                <th>Roles</th>
-                <th>Password</th>
-                <th>Uuid</th>
+                <th>firstname</th>
+                <th>lastname</th>
+                <th>patronymic</th>
+                <th>phone</th>
+                <th>birthday</th>
+                <th>address</th>
+                <th>sex</th>
                 <th>actions</th>
             </tr>
         </thead>
@@ -21,9 +25,13 @@
             <tr>
                 <td>{{ client.id }}</td>
                 <td>{{ client.email }}</td>
-                <td>{{ client.roles ? client.roles|json_encode : '' }}</td>
-                <td>{{ client.password }}</td>
-                <td>{{ client.uuid }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.patronymic }}</td>
+                <td>{{ user.phone }}</td>
+                <td>{{ user.birthday }}</td>
+                <td>{{ user.address }}</td>
+                <td>{{ user.sex }}</td>
                 <td>
                     <a href="{{ path('app_client_show', {'id': client.id}) }}">show</a>
                     <a href="{{ path('app_client_edit', {'id': client.id}) }}">edit</a>
