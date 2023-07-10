@@ -7,6 +7,9 @@ use App\Repository\BasketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use RetailCrm\Api\Model\Callback\Entity\Delivery\Customer;
+use RetailCrm\Api\Model\Entity\Delivery\SerializedOrderProduct;
+use RetailCrm\Api\Model\Entity\Loyalty\SerializedOrderProductOffer;
+use RetailCrm\Api\Model\Entity\Orders\Delivery\OrderDeliveryAddress;
 use RetailCrm\Api\Model\Entity\Orders\Delivery\SerializedDeliveryService;
 use RetailCrm\Api\Model\Entity\Orders\Delivery\SerializedOrderDelivery;
 use RetailCrm\Api\Model\Entity\Orders\Order;
@@ -81,8 +84,6 @@ class CartController extends BaseController
             dd($e);
         }
 
-        dd($responseDelivery);
-
         ## здесь добавить форму
 
         ## проверка что форма прошла
@@ -100,12 +101,21 @@ class CartController extends BaseController
         // данные о платеже и доставке из 
         # заполнить из формы
         $requestOrder->order->payments = [new Payment()];
-        $requestOrder->order->payments[0]->type = $responsePayment->paymentTypes[1]->code;
+        $requestOrder->order->payments[0]->type = 'bank-card';
 
         $requestOrder->order->delivery = new SerializedOrderDelivery();
         $requestOrder->order->delivery->service = new SerializedDeliveryService();
-        $requestOrder->order->delivery->service->code = $responseDelivery->deliveryTypes[1]->code;
+        $requestOrder->order->delivery->service->code = 'self-delivery';
 
+        $requestOrder->order->delivery->address = new OrderDeliveryAddress();
+        $requestOrder->order->delivery->address->text = "Адрес из формы";
+
+        $requestOrder->order->items = [];
+        # перебрать корзиину и забрать офферы
+        $item = new SerializedOrderProduct();
+        $item->offer = new SerializedOrderProductOffer();
+        $item->offer->id = "id элемента из корзины";
+        # order[items][][quantity]
     }
 
 
