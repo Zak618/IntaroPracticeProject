@@ -179,7 +179,6 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
                 $this->birthday = $resultClient->birthday;
                 $this->address = $resultClient->address;
                 $this->sex = $resultClient->sex;
-                $this->address = $resultClient->address->text;
 
                 $this->isCrmLoad = true;
 

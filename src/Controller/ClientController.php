@@ -28,58 +28,38 @@ use RetailCrm\Api\Model\Request\Customers\CustomersEditRequest;
 #[Route('/client')]
 class ClientController extends BaseController
 {
-    #[Route('/', name: 'app_client_index', methods: ['GET'])]
-    public function index(ClientRepository $clientRepository): Response
+    #[Route('', name: 'app_client_index', methods: ['GET'])]
+    public function show(): Response
     {
-        return $this->render('client/index.html.twig', [
-            'clients' => $clientRepository->findAll(),
-        ]);
-    }
-
-    #[Route('/new', name: 'app_client_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, ClientRepository $clientRepository): Response
-    {
-        $client = new Client();
-        $form = $this->createForm(ClientType::class, $client);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $clientRepository->save($client, true);
-
-            return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->renderForm('client/new.html.twig', [
-            'client' => $client,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_client_show', methods: ['GET'])]
-    public function show(Client $client): Response
-    {
-        return $this->render('client/show.html.twig', [
-            'client' => $client,
-        ]);
-    }
-
-
-    #[Route('/{id}/edit_client', name: 'app_client_edit', methods: ['GET', 'POST'])]
-    public function edit_client(Request $request, Client $client, ClientRepository $clientRepository): Response
-    {
-
-        $user_api =$this->createRetailCrmClient();
         $user=$this->getUser();
         $user->crmLoad();
+
+        return $this->render('client/show.html.twig', [
+            'client' => $user,
+        ]);
+    }
+
+
+    #[Route('/edit', name: 'app_client_edit', methods: ['GET', 'POST'])]
+    public function edit_client(
+        Request $request,
+        ClientRepository $clientRepository
+    ): Response
+    {
+        $user=$this->getUser();
+        $user->crmLoad();
+
         $form = $this->createForm(ClientType::class, $user);
-        //dd($user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($form->isSubmitted() && $form->isValid()) 
+        {
+            $user_api =$this->createRetailCrmClient();
+
             // заготовка для отправления запроса
             $requestCustomer = new CustomersEditRequest();
             $requestCustomer->customer= new Customer();
-            // $requestCustomer->by= ByIdentifier::ID;
+            
             $requestCustomer->customer->email  = $form->get('email')->getData();
             $requestCustomer->customer->firstName = $form->get('firstname')->getData();
             $requestCustomer->customer->lastName = $form->get('lastname')->getData();
@@ -98,24 +78,14 @@ class ClientController extends BaseController
                 dd($e);
             }
 
-            $clientRepository->save($client, true);
+            $clientRepository->save($user, true);
 
             return $this->redirectToRoute('app_store', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('client/edit.html.twig', [
-            'client' => $client,
+            'client' => $user,
             'form' => $form,
         ]);
-    }
-
-    #[Route('/{id}', name: 'app_client_delete', methods: ['POST'])]
-    public function delete(Request $request, Client $client, ClientRepository $clientRepository): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
-            $clientRepository->remove($client, true);
-        }
-
-        return $this->redirectToRoute('app_client_index', [], Response::HTTP_SEE_OTHER);
     }
 }
