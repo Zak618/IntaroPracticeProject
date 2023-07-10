@@ -2,28 +2,21 @@
 
 namespace App\Controller;
 
-use App\Entity\Client;
+
 use App\Form\ClientType;
 use App\Repository\ClientRepository;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use RetailCrm\Api\Enum\ByIdentifier;
-
 
 use RetailCrm\Api\Model\Entity\Customers\Customer;
 use RetailCrm\Api\Model\Entity\Customers\CustomerPhone;
-use RetailCrm\Api\Model\Request\Customers\CustomersCreateRequest;
-use RetailCrm\Api\Interfaces\ClientExceptionInterface;
-use RetailCrm\Api\Factory\SimpleClientFactory;
-use RetailCrm\Api\Interfaces\ApiExceptionInterface;
-
 use RetailCrm\Api\Model\Entity\Customers\CustomerAddress;
-use RetailCrm\Api\Model\Entity\CustomersCorporate\CustomerCorporate;
-use RetailCrm\Api\Model\Response\Customers\CustomersEditResponse;
+use RetailCrm\Api\Model\Filter\Orders\OrderFilter;
 use RetailCrm\Api\Model\Request\Customers\CustomersEditRequest;
+use RetailCrm\Api\Model\Request\Orders\OrdersRequest;
+use RetailCrm\Api\Model\Request\Orders\OrdersStatusesRequest;
 
 #[Route('/client')]
 class ClientController extends BaseController
@@ -86,6 +79,51 @@ class ClientController extends BaseController
         return $this->renderForm('client/edit.html.twig', [
             'client' => $user,
             'form' => $form,
+            'header' => $this->getHeader()
+        ]);
+    }
+
+    #[Route('/orders', name: 'app_orders')]
+    public function ordersIndex(Request $request)
+    {
+        $user = $this->getUser();
+        $header = $this->getHeader();
+
+        if(is_null($user)) {
+            return $this->render('client/order.html.twig', [
+                'header' => $header,
+                'error' => 'User not auth'
+            ]);
+        }
+
+        $client = $this->createRetailCrmClient();
+        $currentPage = $request->query->getInt('page', 1);
+
+        // запрос заказов
+        $orderRequest = new OrdersRequest();
+        $orderRequest->filter = new OrderFilter();
+        $orderRequest->filter->customerExternalId = $user->getUuid();
+        $orderRequest->page = $currentPage;
+
+        try {
+            $response = $client->orders->list($orderRequest);
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
+
+        // запрос справочника статусов заказа
+        try {
+            $responseStatuses = $client->references->statuses();
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
+
+        return $this->render('client/order.html.twig', [
+            'header' => $header,
+            'orderds' => $response->orders,
+            'totalPageCount' => $response->pagination->totalPageCount,
+            'currentPage' => $currentPage,
+            'statuses' => $responseStatuses->statuses
         ]);
     }
 }

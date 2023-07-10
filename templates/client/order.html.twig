@@ -1,0 +1,40 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Заказы{% endblock %}
+
+{% block body %}
+    <h1>Заказы</h1>
+
+    {% if orderds is not empty %}
+        {% for orderd in orderds %}
+            <div>
+                <p>Сумма заказа: {{ orderd.totalSumm }}</p>
+                <p>Номер заказа: {{ orderd.number }}</p>
+                <p>Дата создания: {{ orderd.createdAt.format('d.m.Y H:i') }}</p>
+                <p>Статус {{ statuses[orderd.status].name }}</p>
+
+                <h5>Состав заказа:</h5>
+                {% for item in orderd.items %}
+                    Название {{ item.offer.name }} <br>
+                    Цена {{ item.initialPrice }} <br>
+                    Кол-во {{ item.quantity }} <br>
+
+                    Свойства: <ul>
+                    {% for property in item.offer.properties %}
+                        <li>{{ property }}</li>
+                    {% endfor %}
+                    </ul>
+                {% endfor %}
+            </div>
+        {% endfor %}
+    
+        {% if totalPageCount != 0 %}
+            {% for num in 1..totalPageCount %}
+                <a href="{{ path('app_orders', {page: num}) }}">{{num}}</a>
+            {% endfor %}
+        {% endif %}
+
+    {% else %}
+        <p>Вы еще не сделали ни одного заказа</p>
+    {% endif %}
+{% endblock %}
