@@ -11,6 +11,7 @@
                 <p>Сумма заказа: {{ orderd.totalSumm }}</p>
                 <p>Номер заказа: {{ orderd.number }}</p>
                 <p>Дата создания: {{ orderd.createdAt.format('d.m.Y') }}</p>
+                <p>Статус {{ statuses[orderd.status].name }}</p>
 
                 <h5>Состав заказа:</h5>
                 {% for item in orderd.items %}

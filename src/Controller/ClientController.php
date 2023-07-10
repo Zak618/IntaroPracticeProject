@@ -16,6 +16,7 @@ use RetailCrm\Api\Model\Entity\Customers\CustomerAddress;
 use RetailCrm\Api\Model\Filter\Orders\OrderFilter;
 use RetailCrm\Api\Model\Request\Customers\CustomersEditRequest;
 use RetailCrm\Api\Model\Request\Orders\OrdersRequest;
+use RetailCrm\Api\Model\Request\Orders\OrdersStatusesRequest;
 
 #[Route('/client')]
 class ClientController extends BaseController
@@ -98,6 +99,7 @@ class ClientController extends BaseController
         $client = $this->createRetailCrmClient();
         $currentPage = $request->query->getInt('page', 1);
 
+        // запрос заказов
         $orderRequest = new OrdersRequest();
         $orderRequest->filter = new OrderFilter();
         $orderRequest->filter->customerExternalId = $user->getUuid();
@@ -110,13 +112,19 @@ class ClientController extends BaseController
             dd($e->getMessage());
         }
 
-        dd($response);
+        // запрос справочника статусов заказа
+        try {
+            $responseStatuses = $client->references->statuses();
+        } catch (Exception $e) {
+            dd($e->getMessage());
+        }
 
         return $this->render('client/order.html.twig', [
             'header' => $header,
             'orderds' => $response->orders,
             'totalPageCount' => $response->pagination->totalPageCount,
-            'currentPage' => $currentPage
+            'currentPage' => $currentPage,
+            'statuses' => $responseStatuses->statuses
         ]);
     }
 }
