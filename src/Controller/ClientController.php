@@ -105,7 +105,6 @@ class ClientController extends BaseController
         $orderRequest->filter->customerExternalId = $user->getUuid();
         $orderRequest->page = $currentPage;
 
-
         try {
             $response = $client->orders->list($orderRequest);
         } catch (Exception $e) {
