@@ -1,12 +1,16 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    {% for product in cart.product %}
-        {{ product.name }}
-        {{ product.count }}
-    {% endfor %}
+    {% if cart is not empty %}
+        {% for product in cart.product %}
+            {{ product.name }}
+            {{ product.count }}
+        {% endfor %}
 
-    Цена корзины: {{ cart.price }}
-    Всего товаров: {{ cart.getCountOfProducts() }}
+        Цена корзины: {{ cart.price }}
+        Всего товаров: {{ cart.getCountOfProducts() }}
+    {% else %}
+        <p>Вы не авторизованы, корзина недоступна</p>
+    {% endif %}
     
 {% endblock %}
