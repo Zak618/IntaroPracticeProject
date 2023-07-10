@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
+{% if app.user %} 
     {% if cart is not empty %}
         {% for product in cart.product %}
             {{ product.name }}
@@ -9,6 +10,8 @@
 
         Цена корзины: {{ cart.price }}
         Всего товаров: {{ cart.getCountOfProducts() }}
+        <a href="{{ path('app_make_order') }}" ">Создать заказ</a>
+        {% endif %}
     {% else %}
         <p>Вы не авторизованы, корзина недоступна</p>
     {% endif %}

@@ -11,31 +11,32 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ClientType extends AbstractType
+class OrderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
             ->add('patronymic', TextType::class)
+            ->add('email')
             ->add('phone')//, TelType::class)
-            ->add('birthday',DateType::class, [
-                'widget' => 'single_text',
-                'placeholder' => [
-                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
-                ],
-            ])
             ->add('address')
-            ->add('sex', ChoiceType::class, [
+            ->add('payment', ChoiceType::class, [
                 'choices'  => [
-                    'Man' => 1,
-                    'Woman' => 2,
+                    'Банковская карта' => 1,
+                    'Наличными или картой при получении' => 2,
                     
                 ],
             ])
-            
+            ->add('delivery', ChoiceType::class, [
+                'choices'  => [
+                    'Самовывоз' => 1,
+                    'Доставка' => 2,
+                    
+                ],
+            ])
         ;
     }
 
