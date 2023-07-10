@@ -110,10 +110,13 @@ class ClientController extends BaseController
             dd($e->getMessage());
         }
 
+        dd($response);
+
         return $this->render('client/order.html.twig', [
             'header' => $header,
             'orderds' => $response->orders,
-            'totalPageCount' => $response->pagination->totalPageCount
+            'totalPageCount' => $response->pagination->totalPageCount,
+            'currentPage' => $currentPage
         ]);
     }
 }
