@@ -29,6 +29,7 @@ class ClientController extends BaseController
 
         return $this->render('client/show.html.twig', [
             'client' => $user,
+            'header' => $this->getHeader()
         ]);
     }
 

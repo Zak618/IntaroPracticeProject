@@ -6,8 +6,17 @@ use App\Entity\Basket;
 use App\Repository\BasketRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use RetailCrm\Api\Model\Callback\Entity\Delivery\Customer;
+use RetailCrm\Api\Model\Entity\Orders\Delivery\SerializedDeliveryService;
+use RetailCrm\Api\Model\Entity\Orders\Delivery\SerializedOrderDelivery;
+use RetailCrm\Api\Model\Entity\Orders\Order;
+use RetailCrm\Api\Model\Entity\Orders\Payment;
+use RetailCrm\Api\Model\Entity\References\DeliveryService;
 use RetailCrm\Api\Model\Filter\Store\ProductFilterType;
+use RetailCrm\Api\Model\Request\Orders\OrdersCreateRequest;
+use RetailCrm\Api\Model\Request\Orders\OrdersRequest;
 use RetailCrm\Api\Model\Request\Store\ProductsRequest;
+use RetailCrm\Api\ResourceGroup\Delivery;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -54,6 +63,49 @@ class CartController extends BaseController
             'header' => $header, 
             'cart' => isset($cart) ? $cart : null
         ]);
+    }
+
+    #[Route('/order/create', name: 'app_make_order')]
+    public function makeOrder(Request $request)
+    {
+        # пользователь для данных по умолчанию
+        $user = $this->getUser();
+        $user->crmLoad();
+
+        $client = $this->createRetailCrmClient();
+        #справочники доставки и оплаты
+        try {
+            $responseDelivery = $client->references->deliveryTypes();
+            $responsePayment = $client->references->paymentTypes();
+        } catch (Exception $e) {
+            dd($e);
+        }
+
+        dd($responseDelivery);
+
+        ## здесь добавить форму
+
+        ## проверка что форма прошла
+
+
+        $requestOrder = new OrdersCreateRequest();
+        $requestOrder->order = new Order();
+
+        $requestOrder->order->customer = new Customer();
+        $requestOrder->order->customer->externalId = $user->getUuid();
+
+        // заполнение данных о получателе
+        # переделать на заполнение данных из request формы
+
+        // данные о платеже и доставке из 
+        # заполнить из формы
+        $requestOrder->order->payments = [new Payment()];
+        $requestOrder->order->payments[0]->type = $responsePayment->paymentTypes[1]->code;
+
+        $requestOrder->order->delivery = new SerializedOrderDelivery();
+        $requestOrder->order->delivery->service = new SerializedDeliveryService();
+        $requestOrder->order->delivery->service->code = $responseDelivery->deliveryTypes[1]->code;
+
     }
 
 
