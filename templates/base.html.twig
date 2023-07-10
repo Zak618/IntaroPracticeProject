@@ -12,10 +12,42 @@
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
         {% endblock %}
+        <link rel="stylesheet" href="/assets/styles.css">
     </head>
     <body>
-        шапка
-        
+        {# шапка #}
+        <header>
+            <div class="header_top">
+                <div class="logo">
+                    <p class="logo_text">Магазин</p>
+                </div>
+                <nav>
+                    <div class="menu">
+                        <a href="#"><p class="menu_text">Главная</p></a>
+                        <a href="#"><p class="menu_text">Каталог</p></a>
+                    </div>
+                </nav>
+                <div class="auth_log">
+                    <div class="authorization">
+                        <img src="/img/login 1.svg" alt="logo_login">
+                        <a href="#"><p class="auth_log_text">Вход</p></a>
+                    </div>
+                    <div class="login">
+                        <img src="/img/profile.svg" alt="logo_profile">
+                        <a href="#"><p class="auth_log_text">Регистрация</p></a>
+                    </div>
+                </div>
+            </div>
+            <nav>
+                <div class="header_bottom">
+                    <a href="#"><p class="submenu_text">Категория 1</p></a>
+                    <a href="#"><p class="submenu_text">Категория 2</p></a>
+                    <a href="#"><p class="submenu_text">Категория 3</p></a>
+                    <a href="#"><p class="submenu_text">Категория 4</p></a>
+                    <a href="#"><p class="submenu_text">Категория 5</p></a>
+                </div>
+            </nav>
+    </header>
         {% block body %}{% endblock %}
     </body>
 </html>
