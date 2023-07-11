@@ -65,10 +65,13 @@ class StoreController extends BaseController
             dd($exception);
             exit(-1);
         }
+
+        $cat = $this->getChildCategoryById($request->get('id'));
         
         return $this->render('store/category.html.twig', [
             'header' => $this->getHeader(),
-            'categories' => $this->getChildCategoryById($request->get('id')),
+            'categories' => $cat['categoties'],
+            'title' => $cat['name'],
             'products' => $response->products,
             'totalPageCount' => $response->pagination->totalPageCount
         ]);
@@ -112,7 +115,21 @@ class StoreController extends BaseController
             dd($exception);
             exit(-1);
         }
+    
+        $request = new ProductGroupsRequest();
+        $request->filter = new ProductGroupFilterType();
+        $request->filter->ids = [$categoryId];
 
-        return $category;
+        try {            
+            $categoryParent = ($client->store->productGroups($request))->productGroup[0]->name;
+        } catch (Exception $exception) {
+            dd($exception);
+            exit(-1);
+        }
+
+        return [
+            'categoties' => $category, 
+            'name' => $categoryParent
+        ];
     }
 }
