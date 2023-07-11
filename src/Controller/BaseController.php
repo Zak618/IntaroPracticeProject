@@ -32,41 +32,50 @@ class BaseController extends AbstractController
 
     protected function getHeader()
     { 
+        // TODO данные должны быть доступны после авторизации
+        // удалить
+        $user = $this->getUser();
+        if($user)
+        {
+            $user->crmLoad();
+        }
+        
         $cache = new FilesystemAdapter();
 
-        $header = $cache->getItem('headerinfo');
-        if (!$header->isHit()) {
+        $category = $cache->getItem('category_menu');
+
+        if (!$category->isHit()) 
+        {
             $client = $this->createRetailCrmClient();
 
             $request = new ProductGroupsRequest();
             $request->filter = new ProductGroupFilterType();
 
             try {            
-                $category = ($client->store->productGroups($request))->productGroup;
+                $categoryMenu = ($client->store->productGroups($request))->productGroup;
             } catch (Exception $exception) {
                 dd($exception);
                 exit(-1);
             }
 
             // TODO временно
-            foreach($category as $key => $c)
+            foreach($categoryMenu as $key => $c)
             {
                 if($c->parentId !== null)
                 {
-                    unset($category[$key]);
+                    unset($categoryMenu[$key]);
                 }
             }
 
-            // сохраняем данные в кеш
-            $header->set([
-                'logo' => $_ENV['LOGO_SRC'],
-                'shopName' => $_ENV['SHOP_NAME'],
-                'category_menu' => array_values($category)
-            ]);
-            $header->expiresAfter(3600 * 2);
-            $cache->save($header);
+            $category->set($categoryMenu);
+            $category->expiresAfter(3600 * 2);
+            $cache->save($category);
         }
 
-        return $cache->getItem('headerinfo')->get();
+        return [
+            'logo' => $_ENV['LOGO_SRC'],
+            'shopName' => $_ENV['SHOP_NAME'],
+            'category_menu' => $cache->getItem('category_menu')->get()
+        ];
     }
 }

@@ -11,38 +11,40 @@ use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TelType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 
-class ClientType extends AbstractType
+class OrderType extends AbstractType
 {
+    // private array $deliveryChoices;
+    // private array $paymentChoices;
+
+    // public function __construct(array $deliveryChoices, array $paymentChoices)
+    // {
+    //     $this->deliveryChoices = $deliveryChoices;
+    //     $this->paymentChoices = $paymentChoices;
+    // }
+    
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
             ->add('patronymic', TextType::class)
-            ->add('phone')//, TelType::class)
-            ->add('birthday',DateType::class, [
-                'widget' => 'single_text',
-                'placeholder' => [
-                    'year' => 'Year', 'month' => 'Month', 'day' => 'Day',
-                ],
-            ])
+            ->add('email')
+            ->add('phone')
             ->add('address')
-            ->add('sex', ChoiceType::class, [
-                'choices'  => [
-                    'Man' => 1,
-                    'Woman' => 2,
-                    
-                ],
+            ->add('payment', ChoiceType::class, [
+                'choices' => $options['paymentChoices'],
             ])
-            
-        ;
+            ->add('delivery', ChoiceType::class, [
+                'choices' => $options['deliveryChoices'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
             'data_class' => Client::class,
+            'deliveryChoices' => [],
+            'paymentChoices' => [],
         ]);
     }
 }
