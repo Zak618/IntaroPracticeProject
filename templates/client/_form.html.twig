@@ -1,11 +1,17 @@
-{{ form_start(form) }}
-        {{ form_row(form.email, { 'attr': {'class': 'form-control mb-3'} }) }}
-        {{ form_row(form.firstname, { 'attr': {'class': 'form-control mb-3'} }) }}
-        {{ form_row(form.lastname, { 'attr': {'class': 'form-control mb-3'} }) }}
-        {{ form_row(form.patronymic, { 'attr': {'class': 'form-control mb-3'} }) }}
-        {{ form_row(form.phone, { 'attr': {'class': 'form-control mb-3'} }) }}
-        {{ form_row(form.birthday, { 'attr': {'class': 'form-control mb-3'} }) }}
-        {{ form_row(form.sex, { 'attr': {'class': 'form-control mb-3'} }) }}
-        {{ form_row(form.address, { 'attr': {'class': 'form-control mb-3'} }) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="contaner">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            {{ form_start(form) }}
+                    {{ form_row(form.email, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(form.firstname, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(form.lastname, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(form.patronymic, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(form.phone, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(form.birthday, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(form.sex, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(form.address, { 'attr': {'class': 'form-control mb-3'} }) }}
+                <button class="btn btn-primary mb-3">{{ button_label|default('Save') }}</button>
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
