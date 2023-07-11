@@ -24,11 +24,7 @@ class ClientController extends BaseController
     #[Route('', name: 'app_client_index', methods: ['GET'])]
     public function show(): Response
     {
-        $user=$this->getUser();
-        $user->crmLoad();
-
         return $this->render('client/show.html.twig', [
-            'client' => $user,
             'header' => $this->getHeader()
         ]);
     }
@@ -40,8 +36,7 @@ class ClientController extends BaseController
         ClientRepository $clientRepository
     ): Response
     {
-        $user=$this->getUser();
-        $user->crmLoad();
+        $user = $this->getUser();
 
         $form = $this->createForm(ClientType::class, $user);
         $form->handleRequest($request);
