@@ -3,7 +3,9 @@
 {% block title %}Client{% endblock %}
 
 {% block body %}
-    <h1>Client</h1>
+<div class="container">  
+<div class="justify-content-center">  
+    <h1 class="text-center">Client</h1>
 
     <table class="table">
         <tbody>
@@ -46,5 +48,7 @@
         </tbody>
     </table>
 
-    <a href="{{ path('app_client_edit') }}">изменить</a>
+    <a class="btn btn-primary mb-3" href="{{ path('app_client_edit') }}">изменить</a>
+    </div>
+    </div>
 {% endblock %}
