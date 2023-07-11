@@ -45,6 +45,8 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
     public $birthday;
     public $address;
     public $sex;
+    public $payment;
+    public $delivery;
     public $isCrmLoad = false;
 
     #[ORM\OneToOne(mappedBy: 'id_client', cascade: ['persist', 'remove'])]
