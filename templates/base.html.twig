@@ -26,10 +26,9 @@
         <!-- Подключение JS файла Bootstrap с плагинами -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script></body>
         {% block header %}
-           {#  <div class="header_top">
+           <div class="header_top">
                 <div class="logo">
                     <p class="logo_text">{{ header.shopName }}</p>
-                    {# <p class="logo_text">Магазин</p> 
                 </div>
                 <nav>
                     <div class="menu">
@@ -51,15 +50,10 @@
             <nav>
                 <div class="header_bottom">
                 {% for category in header.category_menu %}
-                <a class="submenu_text" href="/category/{{ category.id }}"> {{ category.name }} </a>
-                {% endfor %}
-                    <a href="#"><p class="submenu_text">Категория 1</p></a>
-                    <a href="#"><p class="submenu_text">Категория 2</p></a>
-                    <a href="#"><p class="submenu_text">Категория 3</p></a>
-                    <a href="#"><p class="submenu_text">Категория 4</p></a>
-                    <a href="#"><p class="submenu_text">Категория 5</p></a> 
+                    <a class="submenu_text" href="/category/{{ category.id }}"> {{ category.name }} </a>
+                {% endfor %} 
                 </div>
-            </nav>#}
+            </nav>
         {% endblock %}
         
         {% block body %}{% endblock %}
