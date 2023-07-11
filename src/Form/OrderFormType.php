@@ -13,30 +13,38 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 
 class OrderType extends AbstractType
 {
+    // private array $deliveryChoices;
+    // private array $paymentChoices;
+
+    // public function __construct(array $deliveryChoices, array $paymentChoices)
+    // {
+    //     $this->deliveryChoices = $deliveryChoices;
+    //     $this->paymentChoices = $paymentChoices;
+    // }
+    
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        // dd($options);
         $builder
-            
             ->add('firstname', TextType::class)
             ->add('lastname', TextType::class)
             ->add('patronymic', TextType::class)
             ->add('email')
-            ->add('phone')//, TelType::class)
+            ->add('phone')
             ->add('address')
             ->add('payment', ChoiceType::class, [
-                'choices'  => $options['data']['delivery'],
+                'choices' => $options['paymentChoices'],
             ])
             ->add('delivery', ChoiceType::class, [
-                'choices'  => $options['data']['payment'],
-            ])
-        ;
+                'choices' => $options['deliveryChoices'],
+            ]);
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        // $resolver->setDefaults([
-        //     'data_class' => Client::class,
-        // ]);
+        $resolver->setDefaults([
+            'data_class' => Client::class,
+            'deliveryChoices' => [],
+            'paymentChoices' => [],
+        ]);
     }
 }

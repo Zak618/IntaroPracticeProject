@@ -47,6 +47,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
     public $sex;
     public $payment;
     public $delivery;
+    public $retailId;
     public $isCrmLoad = false;
 
     #[ORM\OneToOne(mappedBy: 'id_client', cascade: ['persist', 'remove'])]
@@ -179,7 +180,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
                 $this->patronymic = $resultClient->patronymic;
                 $this->phone = $resultClient->phones[0]->number;
                 $this->birthday = $resultClient->birthday;
-                $this->address = $resultClient->address;
+                $this->address = $resultClient->address->text;
                 $this->sex = $resultClient->sex;
 
                 $this->isCrmLoad = true;

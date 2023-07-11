@@ -27,6 +27,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use RetailCrm\Api\Model\Entity\Customers\CustomerPhone;
 use RetailCrm\Api\Model\Entity\Customers\CustomerAddress;
+use RetailCrm\Api\Model\Entity\Orders\Items\Offer;
+use RetailCrm\Api\Model\Entity\Orders\SerializedRelationCustomer;
 use Symfony\Component\Routing\Annotation\Route;
 
 class CartController extends BaseController
@@ -73,13 +75,31 @@ class CartController extends BaseController
     }
 
     #[Route('/order/create', name: 'app_make_order')]
-    public function makeOrder(Request $request)
+    public function makeOrder(Request $request, EntityManagerInterface $entityManager)
     {
         # пользователь для данных по умолчанию
+        $header = $this->getHeader();
+
         $user = $this->getUser();
-        $user->crmLoad();
+        if(is_null($user))
+        {
+            return $this->renderForm('cart/create_order.html.twig', [
+                'error' => 'Пользователь не авторизован',
+                'header' => $header
+            ]);
+        }
+
+        $cart = $user->getBasket();
+        if(is_null($cart) || empty($cart->getProduct()))
+        {
+            return $this->renderForm('cart/create_order.html.twig', [
+                'error' => 'Корзина пуста, нельзя сделать заказ',
+                'header' => $header
+            ]);
+        }
 
         $client = $this->createRetailCrmClient();
+
         #справочники доставки и оплаты
         try {
             $responseDelivery = $client->references->deliveryTypes();
@@ -88,7 +108,6 @@ class CartController extends BaseController
             dd($e);
         }
 
-        ## здесь добавить форму
         $deliveryTypes = [];
         foreach($responseDelivery->deliveryTypes as $item)
         {
@@ -101,108 +120,71 @@ class CartController extends BaseController
             $paymentTypes[$item->name] = $item->code;
         }
 
-        $formData = [
-            'email' => $user->getEmail(),
-            'firstname' => $user->firstname,
-            'lastname' => $user->lastname,
-            'phone' => $user->phone,
-            'patronymic' => $user->patronymic,
-            'address' => $user->address,
-            'payment' => $paymentTypes,
-            'delivery' => $deliveryTypes,
-        ];
         
-        $form = $this->createForm(OrderType::class, $formData);
+        $form = $this->createForm(OrderType::class, $user, [
+            'deliveryChoices' => $deliveryTypes,
+            'paymentChoices' => $paymentTypes,
+        ]);
         $form->handleRequest($request);
         
         ## проверка что форма прошла
         if ($form->isSubmitted() && $form->isValid()) 
         {
-        $requestOrder = new OrdersCreateRequest();
-        $requestOrder->order = new Order();
+            $requestOrder = new OrdersCreateRequest();
+            $requestOrder->order = new Order();
 
-        $requestOrder->order->customer = new Customer();
-        $requestOrder->order->customer->externalId = $user->getUuid();
+            $requestOrder->order->customer = new SerializedRelationCustomer();
+            $requestOrder->order->customer->externalId = $user->getUuid();
 
-        // заполнение данных о получателе
-        # переделать на заполнение данных из request формы
-        $requestOrder->order->customer->email  = $form->get('email')->getData();
-        $requestOrder->order->customer->firstName = $form->get('firstname')->getData();
-        $requestOrder->order->customer->lastName = $form->get('lastname')->getData();
-        $requestOrder->order->customer->phones = [new CustomerPhone()];
-        $requestOrder->order->customer->phones[0]->number = $form->get('phone')->getData();
-       // $requestOrder->order->customer->address = new CustomerAddress();
-        //$requestOrder->order->customer->address->text = $form-> get('address')->getData();
-        
+            // заполнение данных о получателе
+            $requestOrder->order->email  = $form->get('email')->getData();
+            $requestOrder->order->firstName = $form->get('firstname')->getData();
+            $requestOrder->order->lastName = $form->get('lastname')->getData();
+            $requestOrder->order->patronymic = $form->get('patronymic')->getData();
+            $requestOrder->order->phone = $form->get('phone')->getData();
 
-        // данные о платеже и доставке из 
-        # заполнить из формы
-        $requestOrder->order->payments = [new Payment()];
-       // $requestOrder->order->payments[0]->type = 'bank-card';
-        $requestOrder->order->payments[0]->type = $request->get('payment') == 1 ? 'bank-card' : 'cash';
+            // данные о платеже и доставке
+            $requestOrder->order->payments = [new Payment()];
+            $requestOrder->order->payments[0]->type = $form->get('payment')->getData();
 
-        $requestOrder->order->delivery = new SerializedOrderDelivery();
-        $requestOrder->order->delivery->service = new SerializedDeliveryService();
-       // $requestOrder->order->delivery->service->code = 'self-delivery';
-       $requestOrder->order->delivery->service->code  = $request->get('delivery') == 1 ? 'self-delivery' : 'delivery';
-
-        $requestOrder->order->delivery->address = new OrderDeliveryAddress();
-        //$requestOrder->order->delivery->address->text = "Адрес из формы";
-        $requestOrder->order->delivery->address->text =$form-> get('address')->getData();
-
-        $requestOrder->order->items = [];
-        # перебрать корзиину и забрать офферы
-        
-        $cart = $user->getBasket();
-        $basket_product=$cart->getProduct();
-        //$basket_product->
-        $basket_product = array_values($basket_product);
-       // dd($basket_product[0]);
-
-        //$item = new SerializedOrderProduct();
-        //$item->offer = new SerializedOrderProductOffer();
-        $item = new OrderProduct();
+            $requestOrder->order->delivery = new SerializedOrderDelivery();
+            $requestOrder->order->delivery->code = $form->get('delivery')->getData();
+            $requestOrder->order->delivery->service = new SerializedDeliveryService();
+            $requestOrder->order->delivery->service->code = $form->get('delivery')->getData();
+            // адрес доставки
+            $requestOrder->order->delivery->address = new OrderDeliveryAddress();
+            $requestOrder->order->delivery->address->text = $form-> get('address')->getData();
 
 
+            $requestOrder->order->items = [];
+            # перебрать корзиину и забрать офферы
+            foreach(($cart->getProduct()) as $product)
+            {
+                $item = new OrderProduct();
+                $item->offer = new Offer();
+                $item->offer->id = $product['id'];
+                $item->quantity = $product['count'];
 
+                $requestOrder->order->items[] = $item;
+            }
 
+            try {
+                $client->orders->create($requestOrder);
+                // очищаем корзину
+                $cart->setProduct([]);
+                $entityManager->persist($cart);
+                $entityManager->flush();
+            } catch (Exception $e) {
+                dd($e);
+            }
 
-
-        //
-        //выводит null. Я пока не знаю почему.
-        //
-        //
-        // 
-        dd(var_dump($basket_product[0]['id']));
-
-        for ($i = 0; $i < count($basket_product); $i++) {
-           
-        $item->offer[$i]->id = $basket_product[$i]["id"];
-        
-        # order[items][][quantity]
-        $requestOrder->order->items[$i]->quantity[$i]=$basket_product[$i]["quantity"];
-
+            return $this->redirectToRoute('app_orders', [], Response::HTTP_SEE_OTHER);
         }
 
-
-
-        try {
-             $client->orders->create($requestOrder);
-           // $client->customers->edit($user->getUuid(), $requestCustomer);
-        } catch (Exception $e) {
-            dd($e);
-        }
-
-        //$requestOrder->save($user, true);
-
-        return $this->redirectToRoute('app_store', [], Response::HTTP_SEE_OTHER);
-    }
-
-    return $this->renderForm('cart/create_order.html.twig', [
-        //'client' => $user,
-        'form' => $form,
-        'header' => $this->getHeader()
-    ]);
+        return $this->renderForm('cart/create_order.html.twig', [
+            'form' => $form,
+            'header' => $this->getHeader()
+        ]);
     }
 
 

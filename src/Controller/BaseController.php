@@ -32,6 +32,14 @@ class BaseController extends AbstractController
 
     protected function getHeader()
     { 
+        // TODO данные должны быть доступны после авторизации
+        // удалить
+        $user = $this->getUser();
+        if($user)
+        {
+            $user->crmLoad();
+        }
+        
         $cache = new FilesystemAdapter();
 
         $category = $cache->getItem('category_menu');
