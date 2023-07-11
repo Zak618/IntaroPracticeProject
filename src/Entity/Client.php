@@ -204,4 +204,14 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
 
         return false;
     }
+
+    public function getSalt(): ?string
+    {
+        return null;
+    }
+
+    public function getUsername(): string
+    {
+        return $this->email;
+    }
 }
