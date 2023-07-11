@@ -86,6 +86,7 @@ class RegistrationController extends BaseController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form->createView(),
+            'header' => $this->getHeader()
         ]);
     }
 }

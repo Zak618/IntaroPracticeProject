@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Оформить заказ{% endblock %}
+
+{% block body %}
+    {% if error is defined %}
+        {{ error }}
+    {% else %}
+        <h1>Оформить заказ</h1>
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+            <button class="btn">{{ button_label|default('Создать заказ') }}</button>
+        {{ form_end(form) }}
+
+        <a href="{{ path('app_cart') }}">Вернуться в корзину</a>
+    {% endif %}
+{% endblock %}
