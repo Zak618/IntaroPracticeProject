@@ -26,6 +26,7 @@
         <!-- Подключение JS файла Bootstrap с плагинами -->
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.min.js" integrity="sha384-7VPbUDkoPSGFnVtYi0QogXtr74QeVeeIs99Qfg5YCF+TidwNdjvaKZX19NZ/e6oz" crossorigin="anonymous"></script></body>
         {% block header %}
+        <header class="container mb-3 mt-4">
            <div class="header_top">
                 <div class="logo">
                     <p class="logo_text">{{ header.shopName }}</p>
@@ -38,12 +39,22 @@
                 </nav>
                 <div class="auth_log">
                     <div class="authorization">
-                        <img src="/img/login 1.svg" alt="logo_login">
-                        <a href="#"><p class="auth_log_text">Вход</p></a>
+                        {% if not app.user %}
+                            <img src="/img/login 1.svg" alt="logo login">
+                            <a href="#"><p class="auth_log_text">Вход</p></a>
+                        {% else %}
+                            <img src="#" alt="photo profile">
+                            <a href="#"><p class="auth_log_text">{{ app.user.firstname }}</p></a>
+                        {% endif %}
                     </div>
                     <div class="login">
-                        <img src="/img/profile.svg" alt="logo_profile">
-                        <a href="#"><p class="auth_log_text">Регистрация</p></a>
+                        {% if not app.user %}
+                            <img src="/img/profile.svg" alt="logo profile">
+                            <a href="#"><p class="auth_log_text">Регистрация</p></a>
+                        {% else %}
+                            <img src="#" alt="logo basket">
+                            <a href="#"><p class="auth_log_text">Корзина</p></a>
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -54,8 +65,9 @@
                 {% endfor %} 
                 </div>
             </nav>
-        {% endblock %}
         
+        {% endblock %}
+        </header>
         {% block body %}{% endblock %}
     </body>
 </html>
