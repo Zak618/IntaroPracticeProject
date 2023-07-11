@@ -15,6 +15,7 @@ class OrderType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        // dd($options);
         $builder
             
             ->add('firstname', TextType::class)
@@ -24,26 +25,18 @@ class OrderType extends AbstractType
             ->add('phone')//, TelType::class)
             ->add('address')
             ->add('payment', ChoiceType::class, [
-                'choices'  => [
-                    'Банковская карта' => 1,
-                    'Наличными или картой при получении' => 2,
-                    
-                ],
+                'choices'  => $options['data']['delivery'],
             ])
             ->add('delivery', ChoiceType::class, [
-                'choices'  => [
-                    'Самовывоз' => 1,
-                    'Доставка' => 2,
-                    
-                ],
+                'choices'  => $options['data']['payment'],
             ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
-            'data_class' => Client::class,
-        ]);
+        // $resolver->setDefaults([
+        //     'data_class' => Client::class,
+        // ]);
     }
 }

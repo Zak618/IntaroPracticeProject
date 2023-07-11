@@ -89,9 +89,30 @@ class CartController extends BaseController
         }
 
         ## здесь добавить форму
+        $deliveryTypes = [];
+        foreach($responseDelivery->deliveryTypes as $item)
+        {
+            $deliveryTypes[$item->name] = $item->code;
+        }
 
+        $paymentTypes = [];
+        foreach($responsePayment->paymentTypes as $item)
+        {
+            $paymentTypes[$item->name] = $item->code;
+        }
+
+        $formData = [
+            'email' => $user->getEmail(),
+            'firstname' => $user->firstname,
+            'lastname' => $user->lastname,
+            'phone' => $user->phone,
+            'patronymic' => $user->patronymic,
+            'address' => $user->address,
+            'payment' => $paymentTypes,
+            'delivery' => $deliveryTypes,
+        ];
         
-        $form = $this->createForm(OrderType::class, $user);
+        $form = $this->createForm(OrderType::class, $formData);
         $form->handleRequest($request);
         
         ## проверка что форма прошла
