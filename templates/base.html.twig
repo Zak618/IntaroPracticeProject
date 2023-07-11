@@ -33,23 +33,24 @@
                 </div>
                 <nav>
                     <div class="menu">
-                        <a href="#"><p class="menu_text">Главная</p></a>
-                        <a href="#"><p class="menu_text">Каталог</p></a>
+                        <a href="{{ path('app_main') }}"><p class="menu_text">Главная</p></a>
+                        <a href="{{ path('app_store') }}"><p class="menu_text">Каталог</p></a>
                     </div>
                 </nav>
                 <div class="auth_log">
                     <div class="authorization">
                         {% if not app.user %}
-                            <img src="/img/login.svg" alt="logo login">
+                            <a href="{{ path('app_login') }}"><img src="/img/login.svg" alt="logo login"></a>
                             <a href="{{ path('app_login') }}"><p class="auth_log_text">Вход</p></a>
                         {% else %}
-                            <a href="#"><p class="auth_log_text">{{ app.user.firstname }}</p></a>
+                            <a href="{{ path('app_client_index') }}"><p class="auth_log_text">{{ app.user.firstname }}</p></a>
                             <div class="dropdown">
                                 <a href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" >
                                     <img src="/img/chevron_down.svg" alt="logo">
                                 </a>
 
                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="{{ path('app_client_index') }}">Профиль</a></li>
                                     <li><a class="dropdown-item" href="{{ path('app_orders') }}">Заказы</a></li>
                                     <li><a class="dropdown-item" href="{{ path('app_logout') }}">Выход</a></li>
                                 </ul>
@@ -58,11 +59,11 @@
                     </div>
                     <div class="login">
                         {% if not app.user %}
-                            <img src="/img/profile.svg" alt="logo profile">
+                            <a href="{{ path('app_register') }}"><img src="/img/profile.svg" alt="logo profile"></a>
                             <a href="{{ path('app_register') }}"><p class="auth_log_text">Регистрация</p></a>
                         {% else %}
-                            <img src="/img/cart.svg" alt="logo basket">
-                            <a href="#"><p class="auth_log_text">Корзина</p></a>
+                            <a href="{{ path('app_cart') }}"><img src="/img/cart.svg" alt="logo basket"></a>
+                            <a href="{{ path('app_cart') }}"><p class="auth_log_text">Корзина</p></a>
                         {% endif %}
                     </div>
                 </div>
