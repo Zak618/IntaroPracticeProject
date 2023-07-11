@@ -43,8 +43,17 @@
                             <img src="/img/login.svg" alt="logo login">
                             <a href="{{ path('app_login') }}"><p class="auth_log_text">Вход</p></a>
                         {% else %}
-                            <img src="#" alt="photo profile">
                             <a href="#"><p class="auth_log_text">{{ app.user.firstname }}</p></a>
+                            <div class="dropdown">
+                                <a href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" >
+                                    <img src="/img/chevron_down.svg" alt="logo">
+                                </a>
+
+                                <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                    <li><a class="dropdown-item" href="{{ path('app_orders') }}">Заказы</a></li>
+                                    <li><a class="dropdown-item" href="{{ path('app_logout') }}">Выход</a></li>
+                                </ul>
+                            </div>
                         {% endif %}
                     </div>
                     <div class="login">
