@@ -1,7 +1,14 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}
+    {% if title is defined %}
+        {{ title }}
+    {% else %} 
+        Каталог
+    {% endif %}
+{% endblock %}
 
+{% block body %}
     <nav>    
         {% if categories is not empty %}
             {% for category in categories %}

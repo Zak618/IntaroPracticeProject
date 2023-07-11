@@ -1,5 +1,11 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}
+    {% if product is defined %}
+        {{ product.name }}
+    {% endif %}
+{% endblock %}
+
 {% block body %}
     <h1>Product Details</h1>
     {% if product is not empty %}

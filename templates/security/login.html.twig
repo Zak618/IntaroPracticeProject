@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Log in!{% endblock %}
+{% block title %}Авторизация{% endblock %}
 
 {% block body %}
 <div class="container">
@@ -15,7 +15,7 @@
                     <div class="mb-3">
                         You are logged in as {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
                     </div>
-                {% endif %}
+                {% else %}
 
                 <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
                 <div class="mb-3">
@@ -48,6 +48,7 @@
                 <a class="btn btn-lg btn-primary" href="{{ path('app_register') }}"  style="background-color: white; color: blue;">
                     Регистрация
                 </a>
+                {% endif %}
             </form>
         </div>
     </div>
