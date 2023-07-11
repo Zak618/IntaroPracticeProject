@@ -41,7 +41,7 @@
                     <div class="authorization">
                         {% if not app.user %}
                             <img src="/img/login.svg" alt="logo login">
-                            <a href="#"><p class="auth_log_text">Вход</p></a>
+                            <a href="{{ path('app_login') }}"><p class="auth_log_text">Вход</p></a>
                         {% else %}
                             <img src="#" alt="photo profile">
                             <a href="#"><p class="auth_log_text">{{ app.user.firstname }}</p></a>
@@ -50,9 +50,9 @@
                     <div class="login">
                         {% if not app.user %}
                             <img src="/img/profile.svg" alt="logo profile">
-                            <a href="#"><p class="auth_log_text">Регистрация</p></a>
+                            <a href="{{ path('app_register') }}"><p class="auth_log_text">Регистрация</p></a>
                         {% else %}
-                            <img src="#" alt="logo basket">
+                            <img src="/img/cart.svg" alt="logo basket">
                             <a href="#"><p class="auth_log_text">Корзина</p></a>
                         {% endif %}
                     </div>
