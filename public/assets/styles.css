@@ -15,7 +15,9 @@ header {
     max-width: 100%;
     /* position: fixed; */
 }
-
+header a {
+    text-decoration: none;
+}
 .header_top {
     display: flex;
     justify-content: space-between;
