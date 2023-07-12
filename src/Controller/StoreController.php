@@ -63,8 +63,7 @@ class StoreController extends BaseController
         $requestProduct->filter->ids = [$request->get('id')];
 
         try {            
-            $response = ($client->store->products($requestProduct))->products[0];
-            // dd($response);
+            $response = $client->store->products($requestProduct);
         } catch (Exception $exception) {
             dd($exception);
             exit(-1);
@@ -72,7 +71,7 @@ class StoreController extends BaseController
 
         return $this->render('store/product.html.twig', [
             'header' => $this->getHeader(),
-            'product' => $response
+            'product' => empty($response->products) ? null : $response->products[0]
         ]);
     }
 
