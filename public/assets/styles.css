@@ -88,18 +88,16 @@ header a {
     padding: 20px 0px;
     flex-direction: row;
     align-items: center;
-    gap: 16px;
-    
-    /* border: 1px solid transparent; 
-    background: linear-gradient(rgba(144, 195, 255, 1), rgba(219, 236, 255, 1)); 
-    box-shadow: inset 0px 0px 0px 100vw #fff; 
-    border-radius: 5px;  */
-    
+    gap: 16px;    
     border: 1px solid; 
     border-radius: 5px;
     border-color: var(--border-color);
 }
-
+img.card-img-top {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+}
 .submenu_text {
     margin: 0;
     color: var(--text-color);
