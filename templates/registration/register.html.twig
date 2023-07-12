@@ -10,27 +10,27 @@
                     <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
                 {% endfor %}
 
-                <h1 class="text-center">Register</h1>
+                <h1 class="text-center">Регистрация</h1>
 
                 {{ form_errors(registrationForm) }}
 
                 {{ form_start(registrationForm) }}
-                    {{ form_row(registrationForm.firstname, { 'attr': {'class': 'form-control mb-3'} }) }}
-                    {{ form_row(registrationForm.lastname, { 'attr': {'class': 'form-control mb-3'} }) }}
-                    {{ form_row(registrationForm.patronymic, { 'attr': {'class': 'form-control mb-3'} }) }}
-                    {{ form_row(registrationForm.phone, { 'attr': {'class': 'form-control mb-3'} }) }}
-                    {{ form_row(registrationForm.birthday, { 'attr': {'class': 'form-control mb-3'} }) }}
-                    {{ form_row(registrationForm.sex, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(registrationForm.firstname, { 'attr': {'class': 'form-control mb-3'}, 'label': 'Имя' }) }}
+                    {{ form_row(registrationForm.lastname, { 'attr': {'class': 'form-control mb-3'}, 'label': 'Фамилия' }) }}
+                    {{ form_row(registrationForm.patronymic, { 'attr': {'class': 'form-control mb-3'}, 'label': 'Отчество' }) }}
+                    {{ form_row(registrationForm.phone, { 'attr': {'class': 'form-control mb-3'}, 'label': 'Номер телефона' }) }}
+                    {{ form_row(registrationForm.birthday, { 'attr': {'class': 'form-control mb-3'}, 'label': 'Дата рождения' }) }}
+                    {{ form_row(registrationForm.sex, { 'attr': {'class': 'form-control mb-3'}, 'label': 'Пол' }) }}
 
-                    {{ form_row(registrationForm.email, { 'attr': {'class': 'form-control mb-3'} }) }}
+                    {{ form_row(registrationForm.email, { 'attr': {'class': 'form-control mb-3'}, 'label': 'Почта' }) }}
                     {{ form_row(registrationForm.plainPassword, {
-                        label: 'Password','attr': {'class': 'form-control mb-3'} 
+                        label: 'Password','attr': {'class': 'form-control mb-3'}, 'label': 'Пароль' 
                     }) }}
                     {{ form_row(registrationForm.agreeTerms, {
                         'attr': {
                             'class': 'form-check-input mb-3',
                             'style': 'margin-left: 10px;'
-                        }
+                        }, 'label': 'Согласие на обработку данных'
                     }) }}
 
                     <button type="submit" class="btn btn-primary mb-3">Регистрация</button>
