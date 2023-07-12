@@ -69,7 +69,7 @@
 
 async function changeCart(offer_id) {
     try {
-       const response = await fetch(`http://127.0.0.1:8000/product/${offer_id}`, {
+       const response = await fetch(`/product/${offer_id}`, {
           method: 'POST',
           headers: {
              'Content-Type': 'application/json'
@@ -91,7 +91,7 @@ async function changeCart(offer_id) {
  
  async function decreaseQuantity(offer_id) {
     try {
-       const response = await fetch(`http://127.0.0.1:8000/product/${offer_id}`, {
+       const response = await fetch(`/product/${offer_id}`, {
           method: 'DELETE',
           headers: {
              'Content-Type': 'application/json'
@@ -113,7 +113,7 @@ async function changeCart(offer_id) {
  
  async function removeOffer(offer_id) {
     try {
-       const response = await fetch(`http://127.0.0.1:8000/product/${offer_id}/all`, {
+       const response = await fetch(`/product/${offer_id}/all`, {
           method: 'DELETE',
           headers: {
              'Content-Type': 'application/json'
@@ -134,7 +134,7 @@ async function changeCart(offer_id) {
  }
 
 
- 
+
  // Получаем все элементы с классом "change-cart-btn"
 const changeCartBtns = document.getElementsByClassName("change-cart-btn");
 Array.from(changeCartBtns).forEach(btn => {
