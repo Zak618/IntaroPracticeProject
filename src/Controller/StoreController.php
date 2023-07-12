@@ -78,7 +78,8 @@ class StoreController extends BaseController
             'categories' => $cat['categoties'],
             'title' => $cat['name'],
             'products' => $response->products,
-            'totalPageCount' => $response->pagination->totalPageCount
+            'totalPageCount' => $response->pagination->totalPageCount,
+            'currentPage' => $currentPage
         ]);
     }
 

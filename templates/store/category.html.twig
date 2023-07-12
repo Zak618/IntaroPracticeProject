@@ -46,15 +46,15 @@
         </div>
         
         {% if totalPageCount != 0 %}
-                    <div class="mt-4 mb-4">
-                        <ul class="pagination justify-content-center">
-                            {% for num in 1..totalPageCount %}
-                                <li class="page-item {% if num == currentPage %}active{% endif %}">
-                                    <a class="page-link" href="{{ path('app_store', {page: num}) }}">{{ num }}</a>
-                                </li>
-                            {% endfor %}
-                        </ul>
-                    </div>
+            <div class="mt-4 mb-4">
+                <ul class="pagination justify-content-center">
+                    {% for num in 1..totalPageCount %}
+                        <li class="page-item {% if num == currentPage %}active{% endif %}">
+                            <a class="page-link" href="{{ path('app_store', {page: num}) }}">{{ num }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
         {% endif %}
 
     {% else %}
