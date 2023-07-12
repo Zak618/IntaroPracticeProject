@@ -169,3 +169,6 @@ header a {
     background: #fbadad;
     color: #7a0101;
 }
+.gap-10 {
+    gap: 10px;
+}

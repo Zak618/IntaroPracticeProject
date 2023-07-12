@@ -4,15 +4,13 @@
 {% endblock %}
 
 {% block body %}
-
-<?php dd(orderd)?>
 	<div class='container'>
 		<h1 class='h1'>Заказы</h1>
 
 		<div class="row">
 			{% if orderds is not empty %}
 				{% for orderd in orderds %}
-					<div class="col-sm-12">
+					<div class="col-sm-12 mb-3">
 						<div class="card">
 							<div class="card-body">
 								<h5 class="card-title d-flex justify-content-between">
@@ -23,19 +21,25 @@
                                 </h5>
 
                                 <div class='d-flex justify-content-between mb-3'>
-                                    <div class='order-info__item'>
+                                    <div class='order-info__item text-muted'>
                                         <span>Сумма заказа</span>
-                                        {{ orderd.totalSumm }}
+                                        <div>{{ orderd.totalSumm }}</div>
                                     </div>
 
-                                    <div class='order-info__item'>
+                                    <div class='order-info__item text-muted'>
                                         <span>Дата создания</span>
-                                        {{ orderd.createdAt.format('d.m.Y H:i') }}
+                                        <div>{{ orderd.createdAt.format('d.m.Y H:i') }}</div>
                                     </div>
 
-                                    <div class='order-info__item'>
-                                        <span>Кол-во товаров</span>
-                                        {# {{ count(orderd.items) }} #}
+                                    <div class='order-info__item text-muted'>
+                                        <span>Адрес доставки</span>
+                                        <div>
+                                        {% if orderd.delivery.address %}
+                                            {{orderd.delivery.address.text}}
+                                        {% else %}
+                                            не указан
+                                        {% endif %}
+                                        </div>
                                     </div>
                                 </div>
 
@@ -49,21 +53,21 @@
 								<ul class="list-group list-group-flush collapse" id="order{{ orderd.number }}">
 									{% for item in orderd.items %}
 										<li class="list-group-item">
-											{{ item.offer.name }}
-											<br>
-											Цена
-											{{ item.initialPrice }}
-											<br>
-											Кол-во
-											{{ item.quantity }}
-											<br>
-
+                                        <div class='d-flex mb-1 gap-10'>
+											<b>{{ item.offer.name }}</b>
+											<div>
+                                                Цена {{ item.initialPrice }}
+											</div>
+											<div>
+                                                Кол-во {{ item.quantity }}
+											</div>
+                                        </div>
 											Свойства:
-											<ul>
+											<div class='d-flex gap-10'>
 												{% for property in item.offer.properties %}
-													<li>{{ property }}</li>
+													<div>{{ property }}</div>
 												{% endfor %}
-											</ul>
+											</div>
 										</li>
 									{% endfor %}
 								</ul>
