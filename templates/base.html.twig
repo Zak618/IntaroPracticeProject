@@ -31,18 +31,18 @@
                 </div>
                 <nav>
                     <div class="menu">
-                        <a href="#"><p class="menu_text">Главная</p></a>
+                        <a href="./"><p class="menu_text">Главная</p></a>
                         <a href="#"><p class="menu_text">Каталог</p></a>
                     </div>
                 </nav>
                 <div class="auth_log">
                     <div class="authorization">
                         <img src=".img/login 1.svg" alt="logo_login">
-                        <a href="#"><p class="auth_log_text">Вход</p></a>
+                        <a  href="{{ path('app_login') }}"><p class="auth_log_text">Вход</p></a>
                     </div>
                     <div class="login">
                         <img src=".img/profile.svg" alt="logo_profile">
-                        <a href="#"><p class="auth_log_text">Регистрация</p></a>
+                        <a href="{{ path('app_register') }}"><p class="auth_log_text">Регистрация</p></a>
                     </div>
                 </div>
             </div>

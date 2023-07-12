@@ -3,48 +3,54 @@
 {% block title %}Client{% endblock %}
 
 {% block body %}
-    <h1>Client</h1>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6">
+                <h1 class="text-center">Client</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Фамилия</th>
-                <td>{{ client.firstname }}</td>
-            </tr>
-            <tr>
-                <th>Имя</th>
-                <td>{{ client.lastname }}</td>
-            </tr>
-            <tr>
-                <th>Отчество</th>
-                <td>{{ client.patronymic }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ client.email }}</td>
-            </tr>
-            <tr>
-                <th>Телефон</th>
-                <td>{{ client.phone }}</td>
-            </tr>
-            <tr>
-                <th>День рождения</th>
-                <td>{{ client.birthday.format('d.m.Y') }}</td>
-            </tr>
-            <tr>
-                <th>Адрес доставки</th>
-                {% if client.address %}
-                    <td>{{ client.address.text }}</td>
-                {% else %}
-                    <td>не указан</td>
-                {% endif %}
-            </tr>
-            <tr>
-                <th>Пол</th>
-                <td>{{ client.sex }}</td>
-            </tr>
-        </tbody>
-    </table>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <th>Фамилия</th>
+                            <td>{{ client.firstname }}</td>
+                        </tr>
+                        <tr>
+                            <th>Имя</th>
+                            <td>{{ client.lastname }}</td>
+                        </tr>
+                        <tr>
+                            <th>Отчество</th>
+                            <td>{{ client.patronymic }}</td>
+                        </tr>
+                        <tr>
+                            <th>Email</th>
+                            <td>{{ client.email }}</td>
+                        </tr>
+                        <tr>
+                            <th>Телефон</th>
+                            <td>{{ client.phone }}</td>
+                        </tr>
+                        <tr>
+                            <th>День рождения</th>
+                            <td>{{ client.birthday.format('d.m.Y') }}</td>
+                        </tr>
+                        <tr>
+                            <th>Адрес доставки</th>
+                            {% if client.address %}
+                                <td>{{ client.address.text }}</td>
+                            {% else %}
+                                <td>не указан</td>
+                            {% endif %}
+                        </tr>
+                        <tr>
+                            <th>Пол</th>
+                            <td>{{ client.sex }}</td>
+                        </tr>
+                    </tbody>
+                </table>
 
-    <a href="{{ path('app_client_edit') }}">изменить</a>
+                <a href="{{ path('app_client_edit') }}" class="btn btn-primary">изменить</a>
+            </div>
+        </div>
+    </div>
 {% endblock %}
