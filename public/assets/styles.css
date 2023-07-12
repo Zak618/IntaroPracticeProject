@@ -1,0 +1,111 @@
+:root {
+    --logo-color1:rgba(0, 117, 255, 1);
+    --logo-color2:rgba(110, 177, 255, 1);
+    --text-color: #150068;
+    --border-color: rgba(47, 128, 237, 1);
+    --auth_log-color: #2F80ED;
+}
+
+
+header {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 122px;
+    max-width: 100%;
+    /* position: fixed; */
+}
+header a {
+    text-decoration: none;
+}
+.header_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    background: linear-gradient(var(--logo-color1), var(--logo-color2));
+}
+
+.logo_text {
+    font-size: 32px;
+    font-family: 'Montserrat Alternates';
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    background: white; /* Белый цвет фона */
+    mix-blend-mode: screen; /* Режим наложения */
+    margin: 0;
+}
+
+.menu {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.menu_text {
+    color: var(--text-color);
+    font-size: 16px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0;
+}
+
+.auth_log {
+    display: flex;
+    gap: 24px;
+}
+
+.auth_log_text {
+    color: var(--auth_log-color);
+    font-size: 16px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0;
+}
+
+.authorization {
+    display: flex;
+    gap: 8px;
+}
+
+.login {
+    display: flex;
+    gap: 8px;
+}
+
+.header_bottom {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px 0px;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;
+    
+    /* border: 1px solid transparent; 
+    background: linear-gradient(rgba(144, 195, 255, 1), rgba(219, 236, 255, 1)); 
+    box-shadow: inset 0px 0px 0px 100vw #fff; 
+    border-radius: 5px;  */
+    
+    border: 1px solid; 
+    border-radius: 5px;
+    border-color: var(--border-color);
+}
+
+.submenu_text {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 16px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}

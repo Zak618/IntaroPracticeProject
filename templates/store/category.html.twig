@@ -1,12 +1,19 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}
+    {% if title is defined %}
+        {{ title }}
+    {% else %} 
+        Каталог
+    {% endif %}
+{% endblock %}
 
+{% block body %}
     <nav>    
         {% if categories is not empty %}
             {% for category in categories %}
                 <div>
-                <a href="/category/{{ category.id }}">
+                <a href="/catalog/{{ category.id }}">
                     {{ category.name }}
                 </a></div>
             {% endfor %}

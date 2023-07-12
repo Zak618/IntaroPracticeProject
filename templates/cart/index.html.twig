@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% block title %}Корзина{% endblock %}
+
 {% block body %}
 {% if app.user %} 
     {% if cart is not empty %}
