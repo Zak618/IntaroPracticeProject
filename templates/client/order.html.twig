@@ -1,40 +1,95 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Заказы{% endblock %}
+{% block title %}Заказы
+{% endblock %}
 
 {% block body %}
-    <h1>Заказы</h1>
 
-    {% if orderds is not empty %}
-        {% for orderd in orderds %}
-            <div>
-                <p>Сумма заказа: {{ orderd.totalSumm }}</p>
-                <p>Номер заказа: {{ orderd.number }}</p>
-                <p>Дата создания: {{ orderd.createdAt.format('d.m.Y H:i') }}</p>
-                <p>Статус {{ statuses[orderd.status].name }}</p>
+<?php dd(orderd)?>
+	<div class='container'>
+		<h1 class='h1'>Заказы</h1>
 
-                <h5>Состав заказа:</h5>
-                {% for item in orderd.items %}
-                    Название {{ item.offer.name }} <br>
-                    Цена {{ item.initialPrice }} <br>
-                    Кол-во {{ item.quantity }} <br>
+		<div class="row">
+			{% if orderds is not empty %}
+				{% for orderd in orderds %}
+					<div class="col-sm-12">
+						<div class="card">
+							<div class="card-body">
+								<h5 class="card-title d-flex justify-content-between">
+                                    Заказ {{ orderd.number }}
+                                    <div class='status {{orderd.status}}'>
+                                        {{ statuses[orderd.status].name }}
+                                    </div>
+                                </h5>
 
-                    Свойства: <ul>
-                    {% for property in item.offer.properties %}
-                        <li>{{ property }}</li>
-                    {% endfor %}
-                    </ul>
-                {% endfor %}
-            </div>
-        {% endfor %}
-    
-        {% if totalPageCount != 0 %}
-            {% for num in 1..totalPageCount %}
-                <a href="{{ path('app_orders', {page: num}) }}">{{num}}</a>
-            {% endfor %}
-        {% endif %}
+                                <div class='d-flex justify-content-between mb-3'>
+                                    <div class='order-info__item'>
+                                        <span>Сумма заказа</span>
+                                        {{ orderd.totalSumm }}
+                                    </div>
 
-    {% else %}
-        <p>Вы еще не сделали ни одного заказа</p>
-    {% endif %}
-{% endblock %}
+                                    <div class='order-info__item'>
+                                        <span>Дата создания</span>
+                                        {{ orderd.createdAt.format('d.m.Y H:i') }}
+                                    </div>
+
+                                    <div class='order-info__item'>
+                                        <span>Кол-во товаров</span>
+                                        {# {{ count(orderd.items) }} #}
+                                    </div>
+                                </div>
+
+								<div class="card">
+                                <div class="card-header d-flex justify-content-between">
+									Состав заказа
+                                    <div type="button" data-bs-toggle="collapse" data-bs-target="#order{{ orderd.number }}" aria-expanded="false" aria-controls="order{{ orderd.number }}">
+                                        <img src="/img/chevron_down.svg" alt="logo">
+                                    </div>
+								</div>
+								<ul class="list-group list-group-flush collapse" id="order{{ orderd.number }}">
+									{% for item in orderd.items %}
+										<li class="list-group-item">
+											{{ item.offer.name }}
+											<br>
+											Цена
+											{{ item.initialPrice }}
+											<br>
+											Кол-во
+											{{ item.quantity }}
+											<br>
+
+											Свойства:
+											<ul>
+												{% for property in item.offer.properties %}
+													<li>{{ property }}</li>
+												{% endfor %}
+											</ul>
+										</li>
+									{% endfor %}
+								</ul>
+							    </div>
+							</div>
+						</div>
+					</div>
+				{% endfor %}
+
+                {% if totalPageCount != 0 %}
+                    <div class="mt-4 mb-4">
+                        <ul class="pagination justify-content-center">
+                            {% for num in 1..totalPageCount %}
+                                <li class="page-item {% if num == currentPage %}active{% endif %}">
+                                    <a class="page-link" href="{{ path('app_orders', {page: num}) }}">{{ num }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+
+
+			{% else %}
+				<div class="alert alert-info" role="alert">
+					Вы еще не сделали ни одного заказа
+				</div>
+			{% endif %}
+		</div>
+	{% endblock %}

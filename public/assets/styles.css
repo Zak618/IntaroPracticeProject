@@ -109,3 +109,63 @@ header a {
     font-weight: 500;
     line-height: normal;
 }
+
+
+.status {
+    font-size: .8rem;
+    padding: 5px 10px;
+    border: 1px solid;
+    border-radius: 40px;
+}
+
+.status.new {
+    border-color: #ffe78e;
+    background: #fff2b7;
+    color: #bb9a09;
+}
+
+.status.complete {
+    border-color: #9efa87;
+    background: #a3f991;
+    color: #197a01;
+}
+
+.status.availability-confirmed,
+.status.client-confirmed,
+.status.offer-analog {
+    border-color: #d58eff;
+    background: #dbadfb;
+    color: #4e017a;
+}
+
+.status.prepayed,
+.status.send-to-assembling,
+.status.assembling,
+.status.assembling-complete,
+.status.offer-analog {
+    border-color: #908eff;
+    background: #adadfb;
+    color: #13017a;
+}
+
+.status.send-to-delivery,
+.status.delivering,
+.status.redirect
+{
+    border-color: #8eeaff;
+    background: #adf1fb;
+    color: #015c7a;
+}
+
+.status.cancel-other,
+.status.prices-did-not-suit,
+.status.delyvery-did-not-suit,
+.status.no-call,
+.status.already-buyed,
+.status.no-product,
+.status.redirect
+{
+    border-color: #ff8e8e;
+    background: #fbadad;
+    color: #7a0101;
+}
