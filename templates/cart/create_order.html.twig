@@ -14,7 +14,11 @@
             <div class='cart-area-1'>
                 {% for item in cart %}  
                     <div class='card mb-3 col-12 cart-item'>
-                        <img src="{{ item.images.0 }}" classmb-3="" alt="{{ item.name }}">
+                        {% if item.images is not empty %}
+                            <img src="{{ item.images.0 }}" classmb-3="" alt="{{ item.name }}">
+                        {% else %}
+                            <div>на фотосесии</div>
+                        {% endif %}
                         <div class='card-body'>
                             <b>{{ item.name }}</b>
                             <ul>

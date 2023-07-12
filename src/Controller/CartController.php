@@ -213,6 +213,7 @@ class CartController extends BaseController
         {
             throw new Exception("User not auth");
         }
+        // dd($user);
         // получаем запись корзины из бд
         if(($cart = $user->getBasket()) == null){
             // создаем запись корзины в бд
@@ -227,8 +228,6 @@ class CartController extends BaseController
             $entityManager->persist($cart);
             $entityManager->flush();
         }
-
-        $cart = $entityManager->getRepository(Basket::class)->find($user->getBasket()->getId());
 
         $productsCart = $cart->getProduct();
 
@@ -315,7 +314,7 @@ class CartController extends BaseController
                     break;
                 default:
                     throw new Exception("Unknown type");
-            }    
+            }
             
             $entityManager->flush();
         } catch (Exception $e) {
