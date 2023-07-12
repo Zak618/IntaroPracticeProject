@@ -213,7 +213,6 @@ class CartController extends BaseController
         {
             throw new Exception("User not auth");
         }
-
         // получаем запись корзины из бд
         if(($cart = $user->getBasket()) == null){
             // создаем запись корзины в бд
@@ -222,7 +221,14 @@ class CartController extends BaseController
             $cart->setDiscount(1);
             $cart->setCountOfProducts(0);
             $cart->setPrice(0);
+
+            $user->setBasket($cart);
+            
+            $entityManager->persist($cart);
+            $entityManager->flush();
         }
+
+        $cart = $entityManager->getRepository(Basket::class)->find($user->getBasket()->getId());
 
         $productsCart = $cart->getProduct();
 
@@ -293,6 +299,7 @@ class CartController extends BaseController
         try {
             $cart->setProduct($productsCart);
 
+
             switch($typeChange) {
                 case 'app_product_add':
                     $cart->setCountOfProducts($cart->getCountOfProducts() + 1);
@@ -308,11 +315,11 @@ class CartController extends BaseController
                     break;
                 default:
                     throw new Exception("Unknown type");
-            }
-    
-            $entityManager->persist($cart);
+            }    
+            
             $entityManager->flush();
         } catch (Exception $e) {
+            dd($e);
             throw new Exception("Failed to update buckets");
         }
 
