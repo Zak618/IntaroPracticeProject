@@ -7,36 +7,49 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Product Details</h1>
-    {% if product is not null %}
-        <div>
-            <img src="{{ product.imageUrl }}" alt="Product Image">
-        </div>
+    <div class="container">
+        <h1>Product Details</h1>
+        {% if product is not null %}
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ product.imageUrl }}" alt="Product Image" class="img-fluid">
+                </div>
+                <div class="col-md-8">
+                    <h2>{{ product.name }}</h2>
+                    <p>Цена: {{ product.minPrice }}</p>
+                    <p>Производитель: {{ product.manufacturer }}</p>
+                </div>
+            </div>
 
-        <h2>{{ product.name }}</h2>
-        <p>Цена: {{ product.minPrice }}</p>
-        <p>Производитель: {{ product.manufacturer }}</p>
-
-        <h3>Связные предложения:</h3>
-        <ul>
-            {% for offer in product.offers %}
-                <li>ID: {{ offer.id }}</li>
-                <li>Цена: {{ offer.price }}</li>
-                <li>Название: {{ offer.name }}</li>
-
-                <li>Свойства: <ul>
-                {% for property in offer.properties %}
-                    {{ property }}, 
+            <h3>Связные предложения:</h3>
+            <ul class="list-group">
+                {% for offer in product.offers %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>ID:</strong> {{ offer.id }}<br>
+                                <strong>Цена:</strong> {{ offer.price }}<br>
+                                <strong>Название:</strong> {{ offer.name }}<br>
+                                <strong>Свойства:</strong>
+                                <ul>
+                                    {% for property in offer.properties %}
+                                        <li>{{ property }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% if app.user %}
+                            <div class="col-md-6">
+                                <button onclick="addToCart({{ offer.id }})" class="btn btn-success">Добавить в корзину</button>
+                                <button onclick="decreaseQuantity({{ offer.id }})" class="btn btn-warning">Уменьшить количество</button>
+                                <button onclick="removeFromCart({{ offer.id }})" class="btn btn-danger">Удалить из корзины</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </li>
                 {% endfor %}
-                </ul></li>
-                <li><a href="/product/{{ offer.id }}">Добавить</a></li>
-                <button onclick="addToCart({{ offer.id }})">Добавить в корзину</button>
-                <button onclick="decreaseQuantity({{ offer.id }})">Уменьшить количество</button>
-                <button onclick="removeFromCart({{ offer.id }})">Удалить из корзины</button>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>такого товара не существует, вы попали сюда по ошибке</p>
-    {% endif %}
-
+            </ul>
+        {% else %}
+            <p>такого товара не существует, вы попали сюда по ошибке</p>
+        {% endif %}
+    </div>
 {% endblock %}
