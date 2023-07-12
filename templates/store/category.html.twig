@@ -46,7 +46,9 @@
         </div>
         
     {% else %}
-        <p>ничего нет</p>
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
     {% endif %}
 
     
