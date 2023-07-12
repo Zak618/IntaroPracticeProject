@@ -90,6 +90,7 @@ class CartController extends BaseController
         }
 
         $cart = $user->getBasket();
+
         if(is_null($cart) || empty($cart->getProduct()))
         {
             return $this->renderForm('cart/create_order.html.twig', [
@@ -172,6 +173,9 @@ class CartController extends BaseController
                 $client->orders->create($requestOrder);
                 // очищаем корзину
                 $cart->setProduct([]);
+                $cart->setCountOfProducts(0);
+                $cart->setPrice(0);
+
                 $entityManager->persist($cart);
                 $entityManager->flush();
             } catch (Exception $e) {
@@ -183,7 +187,8 @@ class CartController extends BaseController
 
         return $this->renderForm('cart/create_order.html.twig', [
             'form' => $form,
-            'header' => $this->getHeader()
+            'header' => $this->getHeader(),
+            'cart' => $cart->getProduct()
         ]);
     }
 

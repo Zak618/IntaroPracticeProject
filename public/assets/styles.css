@@ -172,3 +172,27 @@ header a {
 .gap-10 {
     gap: 10px;
 }
+.cart-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1em;
+    position: relative;
+}
+
+.cart-area-2 {
+    position: sticky;
+    top: 0;
+    height: fit-content;
+}
+.cart-item {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    height: fit-content;
+    align-items: start;
+    justify-items: start;
+    gap: 10px;
+}
+
+.cart-item img {
+    width: 200px;
+}

@@ -1,14 +1,14 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}
-    {% if product is defined %}
+    {% if product is not null %}
         {{ product.name }}
     {% endif %}
 {% endblock %}
 
 {% block body %}
     <h1>Product Details</h1>
-    {% if product is not empty %}
+    {% if product is not null %}
         <div>
             <img src="{{ product.imageUrl }}" alt="Product Image">
         </div>
