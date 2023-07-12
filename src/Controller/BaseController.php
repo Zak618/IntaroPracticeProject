@@ -36,7 +36,9 @@ class BaseController extends AbstractController
         // TODO данные должны быть доступны после авторизации
         // удалить
         $user = $this->getUser();
-        $user->crmLoad();
+        
+        if(!is_null($user))
+            $user->crmLoad();
         
         $cache = new FilesystemAdapter();
 
