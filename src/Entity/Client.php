@@ -180,7 +180,7 @@ class Client implements UserInterface, PasswordAuthenticatedUserInterface, Equat
                 $this->patronymic = $resultClient->patronymic;
                 $this->phone = $resultClient->phones[0]->number;
                 $this->birthday = $resultClient->birthday;
-                $this->address = $resultClient->address->text;
+                $this->address = isset($resultClient->address) ? $resultClient->address->text : null;
                 $this->sex = $resultClient->sex;
 
                 $this->isCrmLoad = true;
