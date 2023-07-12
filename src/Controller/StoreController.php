@@ -61,19 +61,25 @@ class StoreController extends BaseController
 
         try {            
             $response = ($client->store->products($requestProducts));
-        } catch (Exception $exception) {
-            dd($exception);
-            exit(-1);
-        }
+            $cat = $this->getChildCategoryById($request->get('id'));
 
-        $cat = $this->getChildCategoryById($request->get('id'));
+        } catch (Exception $exception) {
+            return $this->render('store/category.html.twig', [
+                'header' => $this->getHeader(),
+                'error' => 'Произошла ошибка, возможно, раздела не существует.',
+                'totalPageCount' => 0,
+                'categories' => [],
+                'products' => []
+            ]);
+        }
         
         return $this->render('store/category.html.twig', [
             'header' => $this->getHeader(),
             'categories' => $cat['categoties'],
             'title' => $cat['name'],
             'products' => $response->products,
-            'totalPageCount' => $response->pagination->totalPageCount
+            'totalPageCount' => $response->pagination->totalPageCount,
+            'currentPage' => $currentPage
         ]);
     }
 
@@ -108,23 +114,14 @@ class StoreController extends BaseController
         $request->filter = new ProductGroupFilterType();
         $request->filter->parentGroupId = $categoryId;
 
-        try {            
-            $category = ($client->store->productGroups($request))->productGroup;
-        } catch (Exception $exception) {
-            dd($exception);
-            exit(-1);
-        }
+        $category = ($client->store->productGroups($request))->productGroup;
+        
     
         $request = new ProductGroupsRequest();
         $request->filter = new ProductGroupFilterType();
         $request->filter->ids = [$categoryId];
 
-        try {            
-            $categoryParent = ($client->store->productGroups($request))->productGroup[0]->name;
-        } catch (Exception $exception) {
-            dd($exception);
-            exit(-1);
-        }
+        $categoryParent = ($client->store->productGroups($request))->productGroup[0]->name;
 
         return [
             'categoties' => $category, 
