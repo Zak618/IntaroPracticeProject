@@ -73,8 +73,8 @@ function showNotification(message, type) {
     notification.classList.add('alert', `alert-${type}`);
     notification.setAttribute('role', 'alert');
     notification.innerText = message;
-    
     document.body.appendChild(notification);
+    notification.style.position = 'fixed'; // добавляем позиционирование
     setTimeout(function() {
       notification.remove();
     }, 3000); // таймаут на 3 секунды
