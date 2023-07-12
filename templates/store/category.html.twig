@@ -9,26 +9,46 @@
 {% endblock %}
 
 {% block body %}
-    <nav>    
+    <div class="container mb-3 mt-4">
+    
+    
+
+    <nav class="nav"> 
         {% if categories is not empty %}
             {% for category in categories %}
                 <div>
-                <a href="/catalog/{{ category.id }}">
+                <a class="nav-link" href="/catalog/{{ category.id }}">
                     {{ category.name }}
                 </a></div>
             {% endfor %}
         {% endif %}
     </nav>
 
+
+
     {% if products is not empty %}
+        
         <ul>
             {% for product in products %}
-                <li>{{ product.name }}</li>
-                <a href="/product/{{ product.id }}">добавить в корзиину</a>
+            <div class="row row-cols-1 row-cols-md-3 g-4">
+                <div class="col">
+                    <div class="card">
+                        <img src="..." class="card-img-top" alt="...">
+                            <div class="card-body">
+                                <li>{{ product.name }}</li>
+                                <a href="/product/{{ product.id }}">Подробнее</a>
+                            </div>
+                    </div>
+                </div>
+            </div>
             {% endfor %}
         </ul>
+        
     {% else %}
         <p>ничего нет</p>
     {% endif %}
 
+    
+    
+    </div>
 {% endblock %}
