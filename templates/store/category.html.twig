@@ -28,21 +28,19 @@
 
     {% if products is not empty %}
         
-        <ul>
+        <div class="row g-4">
             {% for product in products %}
-            <div class="row row-cols-1 row-cols-md-3 g-4">
-                <div class="col">
+                <div class="col-4">
                     <div class="card">
-                        <img src="..." class="card-img-top" alt="...">
+                        <img src="{{ product.imageUrl}}" class="card-img-top" alt="{{ product.name }}">
                             <div class="card-body">
-                                <li>{{ product.name }}</li>
+                                <b>{{ product.name }}</b>
                                 <a href="/product/{{ product.id }}">Подробнее</a>
                             </div>
                     </div>
                 </div>
-            </div>
             {% endfor %}
-        </ul>
+        </div>
         
     {% else %}
         <p>ничего нет</p>
