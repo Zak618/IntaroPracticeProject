@@ -43,7 +43,9 @@
                             <a href="{{ path('app_login') }}"><img src="/img/login.svg" alt="logo login"></a>
                             <a href="{{ path('app_login') }}"><p class="auth_log_text">Вход</p></a>
                         {% else %}
-                            <a href="{{ path('app_client_index') }}"><p class="auth_log_text">{{ app.user.firstname }}</p></a>
+                            <a href="{{ path('app_client_index') }}">
+                                <p class="auth_log_text">{{ app.user.firstname }}</p>
+                            </a>
                             <div class="dropdown">
                                 <a href="#" id="dropdownMenuLink" data-bs-toggle="dropdown" >
                                     <img src="/img/chevron_down.svg" alt="logo">
