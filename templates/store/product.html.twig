@@ -37,12 +37,13 @@
                                     {% endfor %}
                                 </ul>
                             </div>
+                            {% if app.user %}
                             <div class="col-md-6">
-                                <a href="/product/{{ offer.id }}" class="btn btn-primary">Добавить</a>
                                 <button onclick="addToCart({{ offer.id }})" class="btn btn-success">Добавить в корзину</button>
                                 <button onclick="decreaseQuantity({{ offer.id }})" class="btn btn-warning">Уменьшить количество</button>
                                 <button onclick="removeFromCart({{ offer.id }})" class="btn btn-danger">Удалить из корзины</button>
                             </div>
+                            {% endif %}
                         </div>
                     </li>
                 {% endfor %}
