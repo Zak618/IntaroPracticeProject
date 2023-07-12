@@ -68,7 +68,18 @@
   
 
 
-function addToCart(offerId) {
+function showNotification(message, type) {
+    const notification = document.createElement('div');
+    notification.classList.add('alert', `alert-${type}`);
+    notification.setAttribute('role', 'alert');
+    notification.innerText = message;
+    
+    document.body.appendChild(notification);
+    setTimeout(function() {
+      notification.remove();
+    }, 3000); // таймаут на 3 секунды
+  }
+  function addToCart(offerId) {
     fetch(`/product/${offerId}`, {
       method: 'POST',
       headers: {
@@ -78,14 +89,14 @@ function addToCart(offerId) {
     })
       .then(response => response.json())
       .then(data => {
-        alert(data);
+        showNotification(data, 'secondary');
         if (data.status === 'success') {
           setTimeout(function() {
-            alert('Товар успешно добавлен в корзину');
+            showNotification('Товар успешно добавлен в корзину', 'success');
           }, 3000); // таймаут на 3 секунды
         } else {
           setTimeout(function() {
-            alert(data.message);
+            showNotification(data.message, 'danger');
           }, 3000); // таймаут на 3 секунды
         }
       })
@@ -106,16 +117,16 @@ function addToCart(offerId) {
         console.log(data);
         if (data.status === 'success') {
           setTimeout(function() {
-            alert('Количество товара успешно уменьшено');
+            showNotification('Количество товара успешно уменьшено', 'success');
           }, 3000); // таймаут на 3 секунды
         } else {
           setTimeout(function() {
-            alert(data.message);
+            showNotification(data.message, 'danger');
           }, 3000); // таймаут на 3 секунды
         }
       })
       .catch(error => {
-        alert('Произошла ошибка:', error);
+        showNotification('Произошла ошибка:', error);
       });
   }
   function removeFromCart(offerId) {
@@ -131,16 +142,16 @@ function addToCart(offerId) {
         console.log(data);
         if (data.status === 'success') {
           setTimeout(function() {
-            alert('Оффер успешно удален из корзины');
+            showNotification('Оффер успешно удален из корзины', 'success');
           }, 3000); // таймаут на 3 секунды
         } else {
           setTimeout(function() {
-            alert(data.message);
+            showNotification(data.message, 'danger');
           }, 3000); // таймаут на 3 секунды
         }
       })
       .catch(error => {
-        alert('Произошла ошибка:', error);
+        showNotification('Произошла ошибка:', error);
       });
   }
   
