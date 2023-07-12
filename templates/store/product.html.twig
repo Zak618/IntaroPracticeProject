@@ -30,6 +30,9 @@
                 {% endfor %}
                 </ul></li>
                 <li><a href="/product/{{ offer.id }}">Добавить</a></li>
+                <button onclick="addToCart({{ offer.id }})">Добавить в корзину</button>
+                <button onclick="decreaseQuantity({{ offer.id }})">Уменьшить количество</button>
+                <button onclick="removeFromCart({{ offer.id }})">Удалить из корзины</button>
             {% endfor %}
         </ul>
     {% else %}
