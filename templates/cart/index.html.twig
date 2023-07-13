@@ -3,19 +3,47 @@
 {% block title %}Корзина{% endblock %}
 
 {% block body %}
-{% if app.user %} 
-    {% if cart is not empty %}
-        {% for product in cart.product %}
-            {{ product.name }}
-            {{ product.count }}
-        {% endfor %}
+<div class="container">  
+    {% if app.user %} 
+        
+        {% if cart is not empty %}
+        <h1 class='h1 mb-3'>Корзина</h1>
+        <div class='cart-container mb-5'>
+        <div class='cart-area-1'>
+            {% for product in cart.product %}
+                <div class='card mb-3 col-12 cart-item'>
+                    {% if product.images is not empty %}
+                        <img src="{{ product.images.0 }}" classmb-3="" alt="{{ product.name }}">
+                    {% else %}
+                        <div>на фотосесии</div>
+                    {% endif %}
+                    <div class='card-body'>
+                        <b>{{ product.name }}</b>
+                        <ul>
+                            <li>Кол-во: {{ product.count }}</li>
+                            <li>Стоимость: {{ product.price }}</li>
+                            <li>Свойства: 
+                                {% for property in product.properties %}
+                                    {{ property }}, 
+                                {% endfor %}
+                            </li>
+                        </ul>
+                    </div>    
+                </div>    
+            {% endfor %}
+        </div>
 
-        Цена корзины: {{ cart.price }}
-        Всего товаров: {{ cart.getCountOfProducts() }}
-        <a href="{{ path('app_make_order') }}" ">Создать заказ</a>
+        <div class='cart-area-2'>
+            <p>Итого: {{ cart.price }}</p>
+            <p>Всего товаров: {{ cart.getCountOfProducts() }}</p>
+            <a class="btn btn-primary" href="{{ path('app_make_order') }}" >Оформить заказ</a>
+        </div>
+        </div>
         {% endif %}
-    {% else %}
-        <p>Вы не авторизованы, корзина недоступна</p>
-    {% endif %}
-    
+
+        {% else %}
+            <p>Вы не авторизованы, корзина недоступна</p>
+        
+        {% endif %}
+</div>   
 {% endblock %}
