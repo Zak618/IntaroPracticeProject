@@ -1,27 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
+{% block title %}
+    {% if title is defined %}
+        {{ title }}
+    {% else %} 
+        Каталог
+    {% endif %}
+{% endblock %}
 
-    <nav>    
+{% block body %}
+    <div class="container mb-3 mt-4">
+    
+    
+
+    <nav class="nav flex-column" style="width: 20%; position: absolute"> 
         {% if categories is not empty %}
             {% for category in categories %}
                 <div>
-                <a href="/category/{{ category.id }}">
+                <a class="nav-link" href="/catalog/{{ category.id }}">
                     {{ category.name }}
-                </a></div>
+                </a>
+                </div>
             {% endfor %}
         {% endif %}
     </nav>
 
+
+
     {% if products is not empty %}
-        <ul>
+        
+        <div class="row g-4" style="margin-left: 20%">
             {% for product in products %}
-                <li>{{ product.name }}</li>
-                <a href="/product/{{ product.id }}">добавить в корзиину</a>
+                <div class="col-4">
+                    <div class="card h-100">
+                        <img src="{{ product.imageUrl}}" class="card-img-top" alt="{{ product.name }}">
+                        <div class="card-body">
+                            <b>{{ product.name }}</b>                               
+                        </div>
+                        <div class="card-footer">
+                            <a href="/product/{{ product.id }}">Подробнее</a>
+                        </div>
+                    </div>
+                </div>
             {% endfor %}
-        </ul>
+        </div>
+        
+        {% if totalPageCount != 0 %}
+            <div class="mt-4 mb-4">
+                <ul class="pagination justify-content-center">
+                    {% for num in 1..totalPageCount %}
+                        <li class="page-item {% if num == currentPage %}active{% endif %}">
+                            <a class="page-link" href="{{ path('app_store', {page: num}) }}">{{ num }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+
     {% else %}
-        <p>ничего нет</p>
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
     {% endif %}
 
+    
+    
+    </div>
 {% endblock %}

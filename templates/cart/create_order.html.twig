@@ -3,16 +3,102 @@
 {% block title %}Оформить заказ{% endblock %}
 
 {% block body %}
+    <div class="container">  
     {% if error is defined %}
-        {{ error }}
+        <div class="alert alert-danger" role="alert">
+            {{ error }}
+        </div>
     {% else %}
-        <h1>Оформить заказ</h1>
+        <h1 class='h1 mb-3'>Оформить заказ</h1>
+        <div class='cart-container mb-5'>
+            <div class='cart-area-1'>
+                {% for item in cart %}  
+                    <div class='card mb-3 col-12 cart-item'>
+                        {% if item.images is not empty %}
+                            <img src="{{ item.images.0 }}" classmb-3="" alt="{{ item.name }}">
+                        {% else %}
+                            <div>на фотосесии</div>
+                        {% endif %}
+                        <div class='card-body'>
+                            <b>{{ item.name }}</b>
+                            <ul>
+                                <li>Кол-во: {{ item.count }}</li>
+                                <li>Стоимость: {{ item.price }}</li>
+                                <li>Свойства: 
+                                    {% for property in item.properties %}
+                                        {{ property }}, 
+                                    {% endfor %}
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
 
-        {{ form_start(form) }}
-            {{ form_widget(form) }}
-            <button class="btn">{{ button_label|default('Создать заказ') }}</button>
-        {{ form_end(form) }}
+            <div class='cart-area-2'>
+                {{ form_start(form) }}
+                       {{ form_row(
+                            form.email, 
+                            { 
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Почта'  
+                            }) 
+                        }}
+                        {{ form_row(
+                            form.firstname, 
+                            {
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Имя' 
+                            }) 
+                        }}
+                        {{ form_row(
+                            form.lastname, 
+                            {
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Фамилия' 
+                            }) 
+                        }}
+                        {{ form_row(
+                            form.patronymic, 
+                            {
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Отчество' 
+                            }) 
+                        }}
+                        {{ form_row(
+                            form.phone, 
+                            {
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Телефон' 
+                            }) 
+                        }}
+                        {{ form_row(
+                            form.address, {
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Адрес доставки' 
+                            }) 
+                        }}
+                        {{ form_row(
+                            form.payment, 
+                            {
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Способ оплаты' 
+                            }) 
+                        }}
+                        {{ form_row(
+                            form.delivery, 
+                            {
+                                'attr': {'class': 'form-control mb-1'}, 
+                                'label': 'Способ доставки' 
+                            }) 
+                        }}
+                    <button class="btn btn-primary">{{ button_label|default('Создать заказ') }}</button>
+                    <a class='btn btn-outline-danger' href="{{ path('app_cart') }}">Отменить</a>
+                {{ form_end(form) }}
 
-        <a href="{{ path('app_cart') }}">Вернуться в корзину</a>
+            </div>
+
+        </div>
     {% endif %}
+    </div>
 {% endblock %}

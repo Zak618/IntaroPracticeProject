@@ -1,33 +1,54 @@
 {% extends 'base.html.twig' %}
 
-{% block body %}
-    <h1>Product Details</h1>
-    {% if product is not empty %}
-        <div>
-            <img src="{{ product.imageUrl }}" alt="Product Image">
-        </div>
-
-        <h2>{{ product.name }}</h2>
-        <p>Цена: {{ product.minPrice }}</p>
-        <p>Производитель: {{ product.manufacturer }}</p>
-
-        <h3>Связные предложения:</h3>
-        <ul>
-            {% for offer in product.offers %}
-                <li>ID: {{ offer.id }}</li>
-                <li>Цена: {{ offer.price }}</li>
-                <li>Название: {{ offer.name }}</li>
-
-                <li>Свойства: <ul>
-                {% for property in offer.properties %}
-                    {{ property }}, 
-                {% endfor %}
-                </ul></li>
-                <li><a href="/product/{{ offer.id }}">Добавить</a></li>
-            {% endfor %}
-        </ul>
-    {% else %}
-        <p>такого товара не существует, вы попали сюда по ошибке</p>
+{% block title %}
+    {% if product is not null %}
+        {{ product.name }}
     {% endif %}
+{% endblock %}
 
+{% block body %}
+    <div class="container">
+        {% if product is not null %}
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="{{ product.imageUrl }}" alt="Product Image" class="img-fluid">
+                </div>
+                <div class="col-md-8">
+                    <h2>{{ product.name }}</h2>
+                    <p>Цена: {{ product.minPrice }}</p>
+                    <p>Производитель: {{ product.manufacturer }}</p>
+                </div>
+            </div>
+
+            <h3>Связные предложения:</h3>
+            <ul class="list-group">
+                {% for offer in product.offers %}
+                    <li class="list-group-item">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <strong>ID:</strong> {{ offer.id }}<br>
+                                <strong>Цена:</strong> {{ offer.price }}<br>
+                                <strong>Название:</strong> {{ offer.name }}<br>
+                                <strong>Свойства:</strong>
+                                <ul>
+                                    {% for property in offer.properties %}
+                                        <li>{{ property }}</li>
+                                    {% endfor %}
+                                </ul>
+                            </div>
+                            {% if app.user %}
+                            <div class="col-md-6">
+                                <button onclick="addToCart({{ offer.id }})" class="btn btn-success">Добавить в корзину</button>
+                                <button onclick="decreaseQuantity({{ offer.id }})" class="btn btn-warning">Уменьшить количество</button>
+                                <button onclick="removeFromCart({{ offer.id }})" class="btn btn-danger">Удалить из корзины</button>
+                            </div>
+                            {% endif %}
+                        </div>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>такого товара не существует, вы попали сюда по ошибке</p>
+        {% endif %}
+    </div>
 {% endblock %}

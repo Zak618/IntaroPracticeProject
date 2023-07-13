@@ -13,19 +13,41 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class StoreController extends BaseController
 {
-    #[Route('', name: 'app_store')]
-    public function index(): Response
+    #[Route('', name: 'app_main')]
+    public function main(): Response
     {
         $header = $this->getHeader();
         
-        return $this->render('store/index.html.twig', [
+        return $this->render('main.html.twig', [
+            'header' => $header
+        ]);
+    }
+    
+    #[Route('/catalog/', name: 'app_store')]
+    public function index(Request $request): Response
+    {
+        $header = $this->getHeader();
+
+        // получаем первые 20 записей
+        $client = $this->createRetailCrmClient();
+
+        try {            
+            $response = ($client->store->products());
+        } catch (Exception $exception) {
+            dd($exception);
+            exit(-1);
+        }
+        
+        return $this->render('store/category.html.twig', [
             'header' => $header, 
-            'categories' => $header['category_menu']
+            'categories' => $header['category_menu'],
+            'products' => $response->products,
+            'totalPageCount' => 0
         ]);
     }
 
     // страница раздела
-    #[Route('/category/{id}', name: 'app_category_page')]
+    #[Route('/catalog/{id}', name: 'app_category_page')]
     public function page(Request $request): Response
     {
         $currentPage = $request->query->getInt('page', 1);
@@ -39,16 +61,25 @@ class StoreController extends BaseController
 
         try {            
             $response = ($client->store->products($requestProducts));
+            $cat = $this->getChildCategoryById($request->get('id'));
+
         } catch (Exception $exception) {
-            dd($exception);
-            exit(-1);
+            return $this->render('store/category.html.twig', [
+                'header' => $this->getHeader(),
+                'error' => 'Произошла ошибка, возможно, раздела не существует.',
+                'totalPageCount' => 0,
+                'categories' => [],
+                'products' => []
+            ]);
         }
         
         return $this->render('store/category.html.twig', [
             'header' => $this->getHeader(),
-            'categories' => $this->getChildCategoryById($request->get('id')),
+            'categories' => $cat['categoties'],
+            'title' => $cat['name'],
             'products' => $response->products,
-            'totalPageCount' => $response->pagination->totalPageCount
+            'totalPageCount' => $response->pagination->totalPageCount,
+            'currentPage' => $currentPage
         ]);
     }
 
@@ -83,13 +114,18 @@ class StoreController extends BaseController
         $request->filter = new ProductGroupFilterType();
         $request->filter->parentGroupId = $categoryId;
 
-        try {            
-            $category = ($client->store->productGroups($request))->productGroup;
-        } catch (Exception $exception) {
-            dd($exception);
-            exit(-1);
-        }
+        $category = ($client->store->productGroups($request))->productGroup;
+        
+    
+        $request = new ProductGroupsRequest();
+        $request->filter = new ProductGroupFilterType();
+        $request->filter->ids = [$categoryId];
 
-        return $category;
+        $categoryParent = ($client->store->productGroups($request))->productGroup[0]->name;
+
+        return [
+            'categoties' => $category, 
+            'name' => $categoryParent
+        ];
     }
 }

@@ -1,0 +1,203 @@
+:root {
+    --logo-color1:rgba(0, 117, 255, 1);
+    --logo-color2:rgba(110, 177, 255, 1);
+    --text-color: #150068;
+    --border-color: rgba(47, 128, 237, 1);
+    --auth_log-color: #2F80ED;
+}
+
+
+header {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    height: 122px;
+    max-width: 100%;
+    /* position: fixed; */
+}
+header a {
+    text-decoration: none;
+}
+.header_top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    background: linear-gradient(var(--logo-color1), var(--logo-color2));
+}
+
+.logo_text {
+    font-size: 32px;
+    font-family: 'Montserrat Alternates';
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    background: white; /* Белый цвет фона */
+    mix-blend-mode: screen; /* Режим наложения */
+    margin: 0;
+}
+
+.menu {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+}
+
+.menu_text {
+    color: var(--text-color);
+    font-size: 16px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0;
+}
+
+.auth_log {
+    display: flex;
+    gap: 24px;
+}
+
+.auth_log_text {
+    color: var(--auth_log-color);
+    font-size: 16px;
+    font-family: Inter;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    margin: 0;
+}
+
+.authorization {
+    display: flex;
+    gap: 8px;
+}
+
+.login {
+    display: flex;
+    gap: 8px;
+}
+
+.header_bottom {
+    display: flex;
+    justify-content: center;
+    max-width: 100%;
+    padding: 20px 0px;
+    flex-direction: row;
+    align-items: center;
+    gap: 16px;    
+    border: 1px solid; 
+    border-radius: 5px;
+    border-color: var(--border-color);
+}
+img.card-img-top {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+}
+.submenu_text {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 16px;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+}
+
+
+.status {
+    font-size: .8rem;
+    padding: 5px 10px;
+    border: 1px solid;
+    border-radius: 40px;
+}
+
+.status.new {
+    border-color: #ffe78e;
+    background: #fff2b7;
+    color: #bb9a09;
+}
+
+.status.complete {
+    border-color: #9efa87;
+    background: #a3f991;
+    color: #197a01;
+}
+
+.status.availability-confirmed,
+.status.client-confirmed,
+.status.offer-analog {
+    border-color: #d58eff;
+    background: #dbadfb;
+    color: #4e017a;
+}
+
+.status.prepayed,
+.status.send-to-assembling,
+.status.assembling,
+.status.assembling-complete,
+.status.offer-analog {
+    border-color: #908eff;
+    background: #adadfb;
+    color: #13017a;
+}
+
+.status.send-to-delivery,
+.status.delivering,
+.status.redirect
+{
+    border-color: #8eeaff;
+    background: #adf1fb;
+    color: #015c7a;
+}
+
+.status.cancel-other,
+.status.prices-did-not-suit,
+.status.delyvery-did-not-suit,
+.status.no-call,
+.status.already-buyed,
+.status.no-product,
+.status.redirect
+{
+    border-color: #ff8e8e;
+    background: #fbadad;
+    color: #7a0101;
+}
+.gap-10 {
+    gap: 10px;
+}
+.cart-container {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 1em;
+    position: relative;
+}
+
+.cart-area-2 {
+    position: sticky;
+    top: 0;
+    height: fit-content;
+}
+.cart-item {
+    display: grid;
+    grid-template-columns: 1fr 5fr;
+    height: fit-content;
+    align-items: start;
+    justify-items: start;
+    gap: 10px;
+}
+
+.cart-item img {
+    width: 200px;
+    max-height: 200px;
+    object-fit: contain;
+}
+.notification {
+    position: fixed;
+    bottom: 0;
+    right: 10px;
+}

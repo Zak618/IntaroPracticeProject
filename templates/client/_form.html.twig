@@ -1,4 +1,61 @@
+
 {{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
+    {{ form_row(
+        form.email, 
+        { 
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'Почта'  
+        }) 
+    }}
+    {{ form_row(
+        form.firstname, 
+        {
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'Имя' 
+        }) 
+    }}
+    {{ form_row(
+        form.lastname, 
+        {
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'Фамилия' 
+        }) 
+    }}
+    {{ form_row(
+        form.patronymic, 
+        {
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'Отчество' 
+        }) 
+    }}
+    {{ form_row(
+        form.phone, 
+        {
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'Телефон' 
+        }) 
+    }}
+    {{ form_row(
+        form.birthday, 
+        {
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'День рождения' 
+        }) 
+    }}
+    {{ form_row(
+        form.sex, 
+        {
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'Пол' 
+        }) 
+    }}
+    {{ form_row(
+        form.address, {
+            'attr': {'class': 'form-control mb-3'}, 
+            'label': 'Адрес доставки' 
+        }) 
+    }}
+    
+    <button class="btn btn-success mb-3">{{ button_label|default('Save') }}</button>
+    <a class="btn btn-primary mb-3" href="{{ path('app_store') }}" style="background-color: white; color: blue;">в магазин</a>
 {{ form_end(form) }}

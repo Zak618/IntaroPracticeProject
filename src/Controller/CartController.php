@@ -90,6 +90,7 @@ class CartController extends BaseController
         }
 
         $cart = $user->getBasket();
+
         if(is_null($cart) || empty($cart->getProduct()))
         {
             return $this->renderForm('cart/create_order.html.twig', [
@@ -172,6 +173,9 @@ class CartController extends BaseController
                 $client->orders->create($requestOrder);
                 // очищаем корзину
                 $cart->setProduct([]);
+                $cart->setCountOfProducts(0);
+                $cart->setPrice(0);
+
                 $entityManager->persist($cart);
                 $entityManager->flush();
             } catch (Exception $e) {
@@ -183,7 +187,8 @@ class CartController extends BaseController
 
         return $this->renderForm('cart/create_order.html.twig', [
             'form' => $form,
-            'header' => $this->getHeader()
+            'header' => $this->getHeader(),
+            'cart' => $cart->getProduct()
         ]);
     }
 
@@ -208,6 +213,7 @@ class CartController extends BaseController
         {
             throw new Exception("User not auth");
         }
+        // dd($user);
         // получаем запись корзины из бд
         if(($cart = $user->getBasket()) == null){
             // создаем запись корзины в бд
@@ -222,8 +228,6 @@ class CartController extends BaseController
             $entityManager->persist($cart);
             $entityManager->flush();
         }
-
-        $cart = $entityManager->getRepository(Basket::class)->find($user->getBasket()->getId());
 
         $productsCart = $cart->getProduct();
 
@@ -310,7 +314,7 @@ class CartController extends BaseController
                     break;
                 default:
                     throw new Exception("Unknown type");
-            }    
+            }
             
             $entityManager->flush();
         } catch (Exception $e) {

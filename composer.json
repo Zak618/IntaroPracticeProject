@@ -44,6 +44,7 @@
         "symfony/web-link": "6.1.*",
         "symfony/yaml": "6.1.*",
         "symfonycasts/verify-email-bundle": "^1.13",
+        "twbs/bootstrap": "5.2.2",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0"
     },
@@ -96,9 +97,6 @@
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"
         },
-        "post-install-cmd": [
-            "@auto-scripts"
-        ],
         "post-update-cmd": [
             "@auto-scripts"
         ]

@@ -1,50 +1,59 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Client{% endblock %}
+{% block title %}Профиль{% endblock %}
 
 {% block body %}
-    <h1>Client</h1>
-
+<div class="container">  
+<div class="justify-content-center">  
+    <h1 class="text-center">Профиль</h1>
+    {% if not app.user %}
+        <div class="alert alert-danger" role="alert">
+            Вы не авторизованы!
+        </div>
+    {% else %}
     <table class="table">
         <tbody>
             <tr>
                 <th>Фамилия</th>
-                <td>{{ client.firstname }}</td>
+                <td>{{ app.user.firstname }}</td>
             </tr>
             <tr>
                 <th>Имя</th>
-                <td>{{ client.lastname }}</td>
+                <td>{{ app.user.lastname }}</td>
             </tr>
             <tr>
                 <th>Отчество</th>
-                <td>{{ client.patronymic }}</td>
+                <td>{{ app.user.patronymic }}</td>
             </tr>
             <tr>
                 <th>Email</th>
-                <td>{{ client.email }}</td>
+                <td>{{ app.user.email }}</td>
             </tr>
             <tr>
                 <th>Телефон</th>
-                <td>{{ client.phone }}</td>
+                <td>{{ app.user.phone }}</td>
             </tr>
             <tr>
                 <th>День рождения</th>
-                <td>{{ client.birthday.format('d.m.Y') }}</td>
+                <td>{{ app.user.birthday.format('d.m.Y') }}</td>
             </tr>
             <tr>
                 <th>Адрес доставки</th>
-                {% if client.address %}
-                    <td>{{ client.address.text }}</td>
+                {% if app.user.address %}
+                    <td>{{ app.user.address }}</td>
                 {% else %}
                     <td>не указан</td>
                 {% endif %}
             </tr>
             <tr>
                 <th>Пол</th>
-                <td>{{ client.sex }}</td>
+                <td>{{ app.user.sex }}</td>
             </tr>
         </tbody>
     </table>
 
-    <a href="{{ path('app_client_edit') }}">изменить</a>
+    <a class="btn btn-primary mb-3" href="{{ path('app_client_edit') }}">изменить</a>
+    </div>
+    </div>
+    {% endif %}
 {% endblock %}

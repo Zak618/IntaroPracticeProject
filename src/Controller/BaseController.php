@@ -37,6 +37,9 @@ class BaseController extends AbstractController
         // удалить
         $user = $this->getUser();
         
+        if(!is_null($user))
+            $user->crmLoad();
+        
         $cache = new FilesystemAdapter();
 
         $category = $cache->getItem('category_menu');
