@@ -28,6 +28,11 @@
                                 {% endfor %}
                             </li>
                         </ul>
+                        <div class="d-flex g-4">
+                            <button onclick="addToCart({{ product.id }})" class="btn me-2 btn-outline-success">Добавить в корзину</button>
+                            <button onclick="decreaseQuantity({{ product.id }})" class="btn me-2 btn-outline-warning">Уменьшить количество</button>
+                            <button onclick="removeFromCart({{ product.id }})" class="btn me-2 btn-outline-danger">Удалить из корзины</button>
+                        </div>
                     </div>    
                 </div>    
             {% endfor %}
