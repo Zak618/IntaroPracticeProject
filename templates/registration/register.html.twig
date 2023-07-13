@@ -4,6 +4,11 @@
 
 {% block body %}
     <div class="container">
+    {% if app.user %}
+        <div class="alert alert-danger" role="alert">
+            Вы авторизованы!
+        </div>
+    {% else %}
         <div class="row justify-content-center">
             <div class="col-md-6">
                 {% for flash_error in app.flashes('verify_email_error') %}
@@ -40,5 +45,7 @@
                 {{ form_end(registrationForm) }}
             </div>
         </div>
+    {% endif %}
+
     </div>
 {% endblock %}

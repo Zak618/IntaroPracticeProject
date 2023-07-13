@@ -39,11 +39,16 @@
             <a class="btn btn-primary" href="{{ path('app_make_order') }}" >Оформить заказ</a>
         </div>
         </div>
+        {% else %}
+            <div class="alert alert-info" role="alert">
+                Корзина пуста, добавьте в нее что-то красивое или нужное!
+            </div>
         {% endif %}
 
-        {% else %}
-            <p>Вы не авторизованы, корзина недоступна</p>
-        
-        {% endif %}
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            Вы не авторизованы, корзина недоступна
+        </div>
+    {% endif %}
 </div>   
 {% endblock %}

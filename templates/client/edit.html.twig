@@ -4,6 +4,7 @@
 
 {% block body %}
     <div class="contaner">
+    {% if app.user %} 
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <h1 class="text-center">Редактирование профиля</h1>
@@ -13,6 +14,11 @@
                 {# <a class="btn btn-secondary" href="{{ path('app_store') }}" style="background-color: white; color: blue;">в магазин</a> #}
             </div>
         </div>
+    {% else %}
+        <div class="alert alert-danger" role="alert">
+            Вы не авторизованы
+        </div>
+    {% endif %}
     </div>
 
 {% endblock %}

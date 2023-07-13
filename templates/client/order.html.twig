@@ -6,6 +6,7 @@
 {% block body %}
 	<div class='container'>
 		<h1 class='h1'>Заказы</h1>
+    {% if app.user %} 
 
 		<div class="row">
 			{% if orderds is not empty %}
@@ -95,5 +96,10 @@
 					Вы еще не сделали ни одного заказа
 				</div>
 			{% endif %}
+        {% else %}
+        <div class="alert alert-danger" role="alert">
+            Вы не авторизованы
+        </div>
+    {% endif %}
 		</div>
 	{% endblock %}
