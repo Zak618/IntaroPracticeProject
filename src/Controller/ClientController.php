@@ -37,6 +37,7 @@ class ClientController extends BaseController
     ): Response
     {
         $user = $this->getUser();
+        $user->crmLoad();
 
         $form = $this->createForm(ClientType::class, $user);
         $form->handleRequest($request);
